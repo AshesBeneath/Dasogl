@@ -43,7 +43,7 @@
 * Fetched from [Sir's Competitive Rework Repo](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_witch_damage_announce.sp)
 * Improved and localized chat outputs.
 ### l4d2_horde_equaliser - Finite Horde Announcer/Tracker
-* Fetched from [devilesk's version](
+* Fetched from [devilesk's version](https://github.com/devilesk/rl4d2l-plugins/blob/master/l4d2_horde_equaliser.sp)
 * Decreased the minimum value for audial feedback.
 * Localized horde notifiers.
 ### l4d2_mix - Mix System
