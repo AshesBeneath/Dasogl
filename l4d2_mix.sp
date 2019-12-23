@@ -78,7 +78,6 @@ public void StartMix()
     Call_StartForward(mixStartedForward);
     Call_Finish();
     EmitSoundToAll("buttons/blip1.wav");
-	ServerCommand("sv_maxplayers 8");
 }
 
 public void StopMix()
@@ -87,7 +86,6 @@ public void StopMix()
     FakeClientCommandAll("sm_show");
     Call_StartForward(mixStoppedForward);
     Call_Finish();
-	ServerCommand("sv_maxplayers 16");
 
     if (isPickingCaptain && captainVoteTimer != INVALID_HANDLE) {
         KillTimer(captainVoteTimer);
