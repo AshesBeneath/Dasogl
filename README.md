@@ -48,7 +48,6 @@
 * Localized horde notifiers.
 ### l4d2_mix - Mix System
 * Fetched from [its original repo by LuckyLock](https://github.com/LuckyServ/sourcemod-plugins/blob/master/source/l4d2_mix.sp)
-* When a mix starts,server slots are set to 8 (to prevent someone from joining during mix | TODO: Kick spectators before moving players), it resets back to previous value when mix has ended. (Default for my server it is 16, you can edit it from the source line #90.)
 * Localized the captain/player pick menu and chat outputs.
 ### l4d2_tank_model - Tank Announce & Random Tank Model Chooser
 * Chooses randomly available tank models in the server (default one or the one appears in the trailer from The Sacrifice 1st chapter.)
