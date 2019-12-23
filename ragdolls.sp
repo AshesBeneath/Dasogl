@@ -24,10 +24,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* Plugin Information */
 public Plugin:myinfo = 
 {
-	name		= "Restore Ragdolls",
-	author		= "Buster \"Mr. Zero\" Nielsen",
+	name		= "Restore Ragdolls [Competitive Edition]",
+	author		= "Mr. Zero, AshesBeenath",
 	description	= "Restores ragdolls of Survivors, upon death, instead of static death model",
-	version		= "1.3.0",
+	version		= "1.3.2",
 	url		= "mrzerodk@gmail.com"
 }
 

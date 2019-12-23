@@ -39,8 +39,8 @@ public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max) 
 }
 
 public Plugin:myinfo = {
-    name = "L4D2 Tank Control EQ [TR]",
-    author = "arti, Sir, devilesk",
+    name = "L4D2 Tank Control EQ [TR - Muhtar Edition]",
+    author = "arti, Sir, devilesk, AshesBeneath",
     description = "Distributes the role of the tank evenly throughout the team",
     version = "0.10.3",
     url = "https://github.com/AshesBeneath/Dasogl"
