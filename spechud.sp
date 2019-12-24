@@ -42,10 +42,10 @@ new bool:hybridScoringAvailable;
 public Plugin:myinfo = 
 {
 	name = "Confogl Evoluated Spectator HUD [TR]",
-	author = "Visor, Sir, devilesk, AshesBeneath",
+	author = "Visor, Sir, devilesk",
 	description = "Provides different HUDs for spectators",
 	version = "3.1.3",
-	url = "https://github.com/AshesBeneath/Dasogl"
+	url = "https://github.com/devilesk/rl4d2l-plugins"
 };
 
 public OnPluginStart() 

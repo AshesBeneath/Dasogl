@@ -8,7 +8,7 @@
 
 public Plugin:myinfo =
 {
-	name = "Player Management Plugin [TR]",
+	name = "Player Management Plugin",
 	author = "CanadaRox",
 	description = "Player management!  Swap players/teams and spectate!",
 	version = "7",

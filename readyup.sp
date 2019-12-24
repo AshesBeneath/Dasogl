@@ -41,7 +41,7 @@ public Plugin:myinfo =
 	author = "CanadaRox, Sir, devilesk, AshesBeneath",
 	description = "New and improved ready-up plugin.",
 	version = "9.2.4",
-	url = "https://github.com/AshesBeneath/Dasogl"
+	url = "https://github.com/devilesk/rl4d2l-plugins"
 };
 
 enum L4D2Team

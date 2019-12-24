@@ -43,10 +43,10 @@ new Handle:captainVoteTimer;
 public Plugin myinfo =
 {
     name = "L4D2 Mix Manager [TR]",
-    author = "Luckylock, AshesBeneath",
+    author = "Luckylock",
     description = "Provides ability to pick captains and teams through menus",
     version = "3",
-    url = "https://github.com/AshesBeneath/Dasogl"
+    url = "https://github.com/LuckyServ/"
 };
 
 public void OnPluginStart()
@@ -72,13 +72,13 @@ public void OnRoundIsLive() {
     StopMix();
 }
 
+//TODO: Find better method to handle with least errors.
 public void StartMix()
 {
     FakeClientCommandAll("sm_hide");
     Call_StartForward(mixStartedForward);
     Call_Finish();
     EmitSoundToAll("buttons/blip1.wav");
-	ServerCommand("sv_maxplayers 8");
 }
 
 public void StopMix()
@@ -87,7 +87,6 @@ public void StopMix()
     FakeClientCommandAll("sm_show");
     Call_StartForward(mixStoppedForward);
     Call_Finish();
-	ServerCommand("sv_maxplayers 16");
 
     if (isPickingCaptain && captainVoteTimer != INVALID_HANDLE) {
         KillTimer(captainVoteTimer);

@@ -12,8 +12,8 @@
 
 public Plugin myinfo =
 {
-    name        = "Advertisements [L4D2 Edition] ",
-    author      = "Tsunami, rikka0w0, AshesBeneath",
+    name        = "Advertisements [L4D(2) Edition] ",
+    author      = "Tsunami, AshesBeneath",
     description = "Display advertisements",
     version     = PL_VERSION,
     url         = "http://github.com/AshesBeneath/Dasogl"
