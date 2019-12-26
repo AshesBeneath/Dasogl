@@ -12,8 +12,8 @@
 
 public Plugin myinfo =
 {
-    name        = "Advertisements [L4D(2) Edition] ",
-    author      = "Tsunami, AshesBeneath",
+    name        = "Advertisements [L4D2 Edition] ",
+    author      = "Tsunami, rikka0w0, AshesBeneath",
     description = "Display advertisements",
     version     = PL_VERSION,
     url         = "http://github.com/AshesBeneath/Dasogl"
@@ -38,7 +38,7 @@ public void OnPluginStart()
     CreateConVar("sm_advertisements_version", PL_VERSION, "Display advertisements", FCVAR_NOTIFY);
     g_hEnabled  = CreateConVar("sm_advertisements_enabled",  "1",                  "Enable/disable displaying advertisements.");
     g_hFile     = CreateConVar("sm_advertisements_file",     "advertisements.txt", "File to read the advertisements from.");
-    g_hInterval = CreateConVar("sm_advertisements_interval", "10",                 "Amount of seconds between advertisements.");
+    g_hInterval = CreateConVar("sm_advertisements_interval", "360",                 "Amount of seconds between advertisements.");
 
     g_hFile.AddChangeHook(ConVarChange_File);
     g_hInterval.AddChangeHook(ConVarChange_Interval);

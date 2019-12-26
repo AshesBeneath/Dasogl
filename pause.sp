@@ -9,10 +9,10 @@
 public Plugin:myinfo =
 {
 	name = "Pause [TR]",
-	author = "CanadaRox, Sir",
+	author = "CanadaRox, Sir, AshesBeenath",
 	description = "Adds pause functionality without breaking pauses, also prevents SI from spawning because of the Pause.",
 	version = "6.1",
-	url = ""
+	url = "https://github.com/AshesBeenath/Dasogl"
 };
 
 enum L4D2Team

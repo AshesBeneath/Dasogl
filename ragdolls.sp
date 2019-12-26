@@ -25,10 +25,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 public Plugin:myinfo = 
 {
 	name		= "Restore Ragdolls",
-	author		= "Buster \"Mr. Zero\" Nielsen",
+	author		= "Mr. Zero, AshesBeneath",
 	description	= "Restores ragdolls of Survivors, upon death, instead of static death model",
-	version		= "1.3.0",
-	url		= "mrzerodk@gmail.com"
+	version		= "1.3.2",
+	url		= "https://github.com/AshesBeneath/Dasogl"
 }
 
 /* Globals */

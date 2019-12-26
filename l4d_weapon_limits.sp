@@ -16,7 +16,7 @@ public Plugin:myinfo =
 	author = "CanadaRox, Stabby, devilesk",
 	description = "Restrict weapons individually or together",
 	version = "1.4",
-	url = "https://github.com/devilesk/rl4d2l-plugins"
+	url = "https://github.com/AshesBeneath/Dasogl"
 }
 
 enum LimitArrayEntry

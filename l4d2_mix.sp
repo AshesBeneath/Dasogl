@@ -43,10 +43,10 @@ new Handle:captainVoteTimer;
 public Plugin myinfo =
 {
     name = "L4D2 Mix Manager [TR]",
-    author = "Luckylock",
+    author = "Luckylock, AshesBeneath",
     description = "Provides ability to pick captains and teams through menus",
     version = "3",
-    url = "https://github.com/LuckyServ/"
+    url = "https://github.com/AshesBeneath/Dasogl"
 };
 
 public void OnPluginStart()

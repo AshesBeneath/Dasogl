@@ -8,11 +8,11 @@
 
 public Plugin:myinfo =
 {
-	name = "Player Management Plugin",
+	name = "Player Management Plugin [TR]",
 	author = "CanadaRox",
 	description = "Player management!  Swap players/teams and spectate!",
 	version = "7",
-	url = ""
+	url = "https://github.com/AshesBeenath/Dasogl"
 };
 
 enum L4D2Team

@@ -123,7 +123,7 @@ public OnClientDisconnect(client)
 {
 	if (bTimerCheater[client])
 	{
-		CPrintToChatAll("{blue}[{default}SoundM{blue}]{default}: Modified Sound Files detected on {olive}%N", client);
+		CPrintToChatAll("{lightreen}★ {default}%N adlı kişide değiştirilmiş ses dosyaları tespit edildi.", client);
 		bTimerCheater[client] = false;
 	}
 }

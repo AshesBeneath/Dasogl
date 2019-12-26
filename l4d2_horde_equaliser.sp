@@ -135,6 +135,7 @@ public Action:L4D_OnSpawnMob(&amount)
 		if (!announcedInChat)
 		{
 			CPrintToChatAll("{lightgreen}★ {green}%i {default}zombiden oluşan {olive}sınırlı horde {default}başlatıldı.", commonLimit);
+			EmitSoundToAll(HORDE_SOUND);
 			announcedInChat = true;
 		}
 		
