@@ -1078,7 +1078,7 @@ InitiateLiveCountdown()
 	{
 		ReturnTeamToSaferoom(L4D2Team_Survivor);
 		SetTeamFrozen(L4D2Team_Survivor, true);
-		PrintHintTextToAll("Hele Sukur Herkes Hazir");
+		PrintHintTextToAll("AHAHDAS DÜS");
 		inLiveCountdown = true;
 		readyDelay = GetConVarInt(l4d_ready_delay);
 		readyCountdownTimer = CreateTimer(1.0, ReadyCountdownDelay_Timer, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
