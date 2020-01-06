@@ -3,7 +3,7 @@
 #include <colors>
 
 #define MAX_STR_LEN 30
-#define MIN_MIX_START_COUNT 2
+#define MIN_MIX_START_COUNT 5
 
 #define COND_HAS_ALREADY_VOTED 0
 #define COND_NEED_MORE_VOTES 1
@@ -45,14 +45,14 @@ public Plugin myinfo =
     name = "L4D2 Mix Manager [TR]",
     author = "Luckylock, AshesBeneath",
     description = "Provides ability to pick captains and teams through menus",
-    version = "3",
+    version = "3.5",
     url = "https://github.com/AshesBeneath/Dasogl"
 };
 
 public void OnPluginStart()
 {
     RegConsoleCmd("sm_mix", Cmd_MixStart, "Mix command");
-    RegAdminCmd("sm_stopmix", Cmd_MixStop, ADMFLAG_CHANGEMAP, "Mix command");
+    RegAdminCmd("sm_stopmix", Cmd_MixStop, ADMFLAG_ROOT, "Mix command");
     AddCommandListener(Cmd_OnPlayerJoinTeam, "jointeam");
     hVoteResultsTrie = CreateTrie();
     hSwapWhitelist = CreateTrie();
@@ -157,7 +157,10 @@ public Action Cmd_MixStart(int client, int args)
     } else if (!isMixAllowed) {
         CPrintToChat(client, "{lightgreen}★ {default}Mixler sadece Ready-Up sürecinde yapılabilir.");
         return Plugin_Handled;
-    }
+    } else if (GetClientTeamEx(client) == 1) {
+		CPrintToChat(client, "{lightgreen}★ {default}Izleyiciler mix için oy veremez.");
+		return Plugin_Handled;
+	}
 
     new mixConditions;
     mixConditions = GetMixConditionsAfterVote(client);
@@ -209,7 +212,7 @@ public int GetMixConditionsAfterVote(int client)
     GetClientAuthId(client, AuthId_SteamID64, clientAuthId, MAX_STR_LEN);
     hasVoted = GetTrieValue(hVoteResultsTrie, clientAuthId, dummy)
 
-    if (GetAdminFlag(GetUserAdmin(client), Admin_Changemap)) {
+    if (GetAdminFlag(GetUserAdmin(client), Admin_Root)) {
         return COND_START_MIX_ADMIN;
 
     } else if (hasVoted){
@@ -239,7 +242,7 @@ public bool Menu_Initialise()
         }
 
         case STATE_SECOND_CAPT: {
-            mixMenu.SetTitle("Diger Kaptani Kim Olsun? ");
+            mixMenu.SetTitle("Diger Takim Kaptani Kim Olsun? ");
             return true;
         }
 
