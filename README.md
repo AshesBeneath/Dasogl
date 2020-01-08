@@ -83,3 +83,6 @@
 ### Speaking List (speaklist)
 * Fetched from [its original repo by Harry Potter](https://github.com/fbef0102/L4D1-Competitive-Plugins/tree/master/SpeakingList)
 * Spectators can no longer see if someone in survivors or infected is speaking regardless of sv_alltalk value
+### L4D2 Tank Rock Glow
+* Fetched from [its original AlliedModders page](https://forums.alliedmods.net/showthread.php?p=2675889)
+* Prevented survivors from seeing the glow
