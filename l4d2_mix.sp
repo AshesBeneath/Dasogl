@@ -158,8 +158,8 @@ public Action Cmd_MixStart(int client, int args)
         CPrintToChat(client, "{lightgreen}★ {default}Mixler sadece Ready-Up sürecinde yapılabilir.");
         return Plugin_Handled;
     } else if (GetClientTeamEx(client) == 1) {
-		CPrintToChat(client, "{lightgreen}★ {default}Izleyiciler mix için oy veremez.");
-		return Plugin_Handled;
+	CPrintToChat(client, "{lightgreen}★ {default}Izleyiciler mix için oy veremez.");
+	return Plugin_Handled;
 	}
 
     new mixConditions;
