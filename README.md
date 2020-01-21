@@ -1,9 +1,9 @@
 # Dasogl
-### Plugins contain in this repo are either:
+**Plugins contain in this repo are either:**
 * Created by me
 * Created by someone else but I edited to add/change/remove/fix features (credits go to their original creators)
-#### Only source files are provided (not to recompile everytime I update the source)
-#### The required .inc files and bash compiler for Windows are included.
+**Includes source and binaries that compiled with SourceMod 1.9 (build 6281)**
+**The required includes are provided**
 ## Plugin List
 ### Advertisements
 * Fetched from [Advertisements 2.0 in AlliedModders](https://forums.alliedmods.net/showthread.php?p=592536) and merged [pull request by rikka0w0](https://github.com/ErikMinekus/sm-advertisements/pull/3) to support colors in L4D2
@@ -29,7 +29,8 @@
 ### Tank Control Handler/Announce (l4d_tank_control_eq)
 * Fetched fixes from [devilesk's version](https://github.com/devilesk/rl4d2l-plugins/blob/master/l4d_tank_control_eq.sp)
 * Made !tankpool command output visible for sender client only.
-* Localized outputs. (D
+* Localized outputs.
+* Added _!tanksal_ command to swap tank without breaking infected tank pool.
 ### Damage Done To Tank Announce (l4d_tank_damage_announce)
 * Fetched from [Sir's Competitive Rework Repo](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_tank_damage_announce.sp)
 * Localized outputs.

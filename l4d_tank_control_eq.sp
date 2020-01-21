@@ -39,10 +39,10 @@ public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max) 
 }
 
 public Plugin:myinfo = {
-    name = "L4D2 Tank Control [TR]",
+    name = "L4D2 Tank Control EQ [TR]",
     author = "arti, Sir, devilesk, AshesBeneath",
     description = "Distributes the role of the tank evenly throughout the team",
-    version = "0.10.3",
+    version = "0.10.4",
     url = "https://github.com/AshesBeneath/Dasogl"
 }
 
@@ -73,14 +73,74 @@ public OnPluginStart() {
     g_hWhosHadTank = CreateArray(MAXSTEAMID);
     
     // Register the boss commands
-    RegConsoleCmd("sm_tank", Tank_Cmd, "Shows who is becoming the tank.");
-    RegConsoleCmd("sm_tankpool", TankPool_Cmd, "Shows who is in the pool of possible tanks.");
-    RegConsoleCmd("sm_boss", Tank_Cmd, "Shows who is becoming the tank.");
-    RegConsoleCmd("sm_witch", Tank_Cmd, "Shows who is becoming the tank.");
+    RegConsoleCmd("sm_tank", Tank_Cmd, "Kim tank olcak?");
+    RegConsoleCmd("sm_tankpool", TankPool_Cmd, "Tank adayları.");
+    RegConsoleCmd("sm_boss", Tank_Cmd, "Kim tank olcak?");
+	RegConsoleCmd("sm_tanksal", TankSal_Cmd, "Tankı salar.");
     
     // Cvars
     g_hTankPrint = CreateConVar("tankcontrol_print_all", "0", "Who gets to see who will become the tank? (0 = Infected, 1 = Everyone)", FCVAR_PLUGIN);
     g_hCvarDebug = CreateConVar("tankcontrol_debug", "0", "Whether or not to debug to console", FCVAR_PLUGIN);
+}
+
+public Action:TankSal_Cmd(client, args) 
+{ 
+	if (L4D2Team:GetClientTeam(client) == L4D2Team:L4D2Team_Infected)
+	{
+		new tankClientId;
+		tankClientId = GetValidInfectedClientBySteamId(g_sQueuedTankSteamId);
+		if (client != tankClientId)
+		{
+			CPrintToChat(client, "{lightgreen}★ {default}Senin olmayan tankı mı salacan hayrola?");
+			PrintDebug("[TankSal] Tank olmayacak olan !tanksal yazdı");
+		}
+		else
+		{
+			TankSalMenu(client); 
+			PrintDebug("[TankSal] !tanksal tetiklendi");
+		}
+	}
+	return Plugin_Handled; 
+} 
+
+TankSalMenu(client) 
+{ 
+	new Handle:menu = CreateMenu(TankSalMenu_Secim); 
+	SetMenuTitle(menu, "Tanki kime salcan?\n"); 
+	decl String:userid[15], String:name[32]; 
+	//new tankClientId;
+	//tankClientId = getInfectedPlayerBySteamId(queuedTankSteamId);
+	for (new i = 1; i <= MaxClients; i++) 
+	{ 
+		if (IsClientInGame(i) && !IsFakeClient(i) && L4D2Team:GetClientTeam(i) == L4D2Team:L4D2Team_Infected)
+		{ 
+			IntToString(GetClientUserId(i), userid, 15); 
+			GetClientName(i, name, 32); 
+			AddMenuItem(menu, userid, name); 
+			PrintDebug("[TankSal] Menüye enfekteler eklendi");
+		} 
+	} 
+	DisplayMenu(menu, client, 0); 
+	PrintDebug("[TankSal] Menü gösterildi");
+} 
+
+public TankSalMenu_Secim(Handle:menu, MenuAction:action, client, option) 
+{ 
+	if (action == MenuAction_End) 
+	{ 
+		CloseHandle(menu); 
+		return; 
+	} 
+	if (action != MenuAction_Select) return; 
+	decl String:userid[15]; 
+	GetMenuItem(menu, option, userid, 15); 
+	new target = GetClientOfUserId(StringToInt(userid)); 
+	if (target > 0) 
+	{
+		ServerCommand("sm_givetank #%s", userid);
+		PrintDebug("[TankSal] Seçim yapıldı, sunucu komudu işlendi : sm_givetank #%s", userid);
+	} 
+	else CPrintToChat(client, "{lightgreen}★ {default}Oyuncu bulunamadı."); 
 }
 
 public Native_SetTank(Handle:plugin, numParams) {
@@ -249,9 +309,9 @@ public Action:Tank_Cmd(client, args) {
     new tankClientId = GetValidInfectedClientBySteamId(g_sQueuedTankSteamId);
 
     if (tankClientId == client)
-        CPrintToChat(client, "{lightgreen}★ {olive}Siz (%N) {default}muhtar olacaksınız.", client);
+        CPrintToChat(client, "{lightgreen}★ {default}Tank olarak seni seçtik pikaçu.");
     else if (tankClientId != -1)
-        CPrintToChat(client, "{lightgreen}★ {olive}%N {default}muhtar olacak.", tankClientId);
+        CPrintToChat(client, "{lightgreen}★ {olive}%N {default}tank olacak.", tankClientId);
     
     return Plugin_Handled;
 }
@@ -270,7 +330,7 @@ public Action:TankPool_Cmd(client, args) {
         
     // If there is nobody on the infected team
     if (!GetArraySize(infectedPool)) {
-        CPrintToChat(client, "{lightgreen}★ {default}Enfekteler takımında oyuncu olmadığından muhtar belirtilemiyor.");
+        CPrintToChat(client, "{lightgreen}★ {default}Enfekteler takımında oyuncu olmadığından tank belirtilemiyor.");
         CloseHandle(infectedPool);
         return Plugin_Handled;
     }
@@ -293,7 +353,7 @@ public Action:TankPool_Cmd(client, args) {
             Format(names, sizeof(names), "%s, %N", names, tankClientId);
     }
     
-    CPrintToChat(client, "{lightgreen}★ {default}Muhtar adayları: {olive}%s", names);
+    CPrintToChat(client, "{lightgreen}★ {default}Tank olabilecek kişiler: {olive}%s", names);
     
     CloseHandle(infectedPool);
     return Plugin_Handled;
@@ -333,7 +393,8 @@ public Action:GiveTank_Cmd(client, args) {
         GetClientAuthId(target, AuthId_Steam2, steamId, sizeof(steamId));
 
         g_sQueuedTankSteamId = steamId;
-        OutputTankToAll();
+        //OutputTankToAll();
+		CPrintToChatAll("{lightgreen}★ Tank kontrolü {olive}%N {default}adlı oyuncuya salındı", target);
         
         PrintDebug("[GiveTank_Cmd] Tank set. arg1: %s, target: %i %N, steamId: %s", arg1, target, target, steamId);
     }
@@ -370,7 +431,7 @@ public Action:AddTankPool_Cmd(client, args) {
         if (index != -1)
             RemoveFromArray(g_hWhosHadTank, index);
 
-        CPrintToChatAll("{lightgreen}★ {olive}%N {default}muhtar adayları arasına eklendi.", target);
+        CPrintToChatAll("{lightgreen}★ {olive}%N {default}tank adayları arasına eklendi.", target);
         
         PrintDebug("[GiveTank_Cmd] Tank pool added. arg1: %s, target: %i %N, steamId: %s", arg1, target, target, steamId);
     }
@@ -407,7 +468,7 @@ public Action:RemoveTankPool_Cmd(client, args) {
         if (index == -1)
             PushArrayString(g_hWhosHadTank, steamId);
 
-        CPrintToChatAll("{lightgreen}★ {olive}%N {default}muhtar adayları arasından kaldırıldı.", target);
+        CPrintToChatAll("{lightgreen}★ {olive}%N {default}tank adayları arasından kaldırıldı.", target);
         
         PrintDebug("[GiveTank_Cmd] Tank pool removed. arg1: %s, target: %i %N, steamId: %s", arg1, target, target, steamId);
     }
@@ -529,12 +590,12 @@ public OutputTankToAll() {
         return;
         
     if (GetConVarBool(g_hTankPrint)) {
-        CPrintToChatAll("{lightgreen}★ {olive}%N {default}muhtar olacak.", tankClientId);
+        CPrintToChatAll("{lightgreen}★ {olive}%N {default}tank olacak.", tankClientId);
     }
     else {
         for (new i = 1; i <= MaxClients; i++) {
             if (IS_VALID_INFECTED(i) || IS_VALID_CASTER(i))
-                CPrintToChat(i, "{lightgreen}★ {olive}%N {default}muhtar olacak.", tankClientId);
+                CPrintToChat(i, "{lightgreen}★ {olive}%N {default}tank olacak.", tankClientId);
         }
     }
 }
