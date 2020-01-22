@@ -2,8 +2,11 @@
 **Plugins contain in this repo are either:**
 * Created by me
 * Created by someone else but I edited to add/change/remove/fix features (credits go to their original creators)
+
 **Includes source and binaries that compiled with SourceMod 1.9 (build 6281)**
+
 **The required includes are provided**
+
 ## Plugin List
 ### Advertisements
 * Fetched from [Advertisements 2.0 in AlliedModders](https://forums.alliedmods.net/showthread.php?p=592536) and merged [pull request by rikka0w0](https://github.com/ErikMinekus/sm-advertisements/pull/3) to support colors in L4D2
