@@ -194,8 +194,8 @@ public Action:AddReadyFooter(Handle:timer)
 
 stock PrintBossPercents(client)
 {
-	FakeClientCommand(client, "say /tankpool");
-	FakeClientCommand(client, "say /current");
+	FakeClientCommand(client, "sm_tankpool");
+	FakeClientCommand(client, "sm_current");
 	CreateTimer(0.1, PrintStuff, client);
 	return 0;
 }
