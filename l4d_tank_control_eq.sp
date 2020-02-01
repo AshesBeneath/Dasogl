@@ -95,9 +95,9 @@ public Action:TankSal_Cmd(client, args)
 		}
 		else
 		{
-			ServerCommand("sm_tankshuffle");
-			PrintDebug("[TankSal] !tanksal triggered by %N", client);
+			ChooseTank();
 			OutputTankToAll();
+			PrintDebug("[TankSal] !tanksal triggered by %N", client);
 		}
 	}
 	return Plugin_Handled; 
@@ -322,7 +322,7 @@ public Action:TankPool_Cmd(client, args) {
 public Action:TankShuffle_Cmd(client, args) {
     PrintDebug("[TankShuffle_Cmd] %N.", client);
     ChooseTank();
-    //OutputTankToAll();
+    OutputTankToAll();
     return Plugin_Handled;
 }
 

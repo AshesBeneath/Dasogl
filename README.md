@@ -1,4 +1,4 @@
-# Dasogl
+# My Collection of SourceMod Plugins for Left 4 Dead 2 Competitive Environment
 **Plugins contain in this repo are either:**
 * Created by me
 * Created by someone else but I edited to add/change/remove/fix features (credits go to their original creators)
@@ -10,7 +10,7 @@
 ## Plugin List
 ### Advertisements
 * Fetched from [Advertisements 2.0 in AlliedModders](https://forums.alliedmods.net/showthread.php?p=592536) and merged [pull request by rikka0w0](https://github.com/ErikMinekus/sm-advertisements/pull/3) to support colors in L4D2
-* Color tag logic is the same as **colors.inc** {default}, {green}, {lightgreen}, {olive}
+* Supported colors in L4D2: {default}, {green}, {lightgreen}, {olive}. _{green} will output yellow color_
 * "top" type advertisements are not supported in L4D2
 * Grab the [config file](https://github.com/ErikMinekus/sm-advertisements/blob/master/addons/sourcemod/configs/advertisements.txt) from its original repo to use it.
 ### Confogl's Competitive Core Plugin (confoglcompmod)
@@ -33,11 +33,12 @@
 * Fetched fixes from [devilesk's version](https://github.com/devilesk/rl4d2l-plugins/blob/master/l4d_tank_control_eq.sp)
 * Made !tankpool command output visible for sender client only.
 * Localized outputs.
-* Added _!tanksal_ command to swap tank without breaking infected tank pool.
+* Added _!tanksal_ command to swap tank by choosing one again from infected pool.
 ### Damage Done To Tank Announce (l4d_tank_damage_announce)
 * Fetched from [Sir's Competitive Rework Repo](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_tank_damage_announce.sp)
 * Localized outputs.
-### Weapon/Item Carry Limit (l4d_weapon_limits)
+* Includes a sound announcing tank spawn in cases where l4d2_tank_model is not being used.
+### Survivor Weapon/Item Carry Limit (l4d_weapon_limits)
 * Fetched fixes from [devilesk's version](https://github.com/devilesk/rl4d2l-plugins/blob/master/l4d_weapon_limits.sp)
 * Localized "max weapon/item limit reached" output.
 ### Damage Done To Witch Announce (l4d_witch_damage_announce)
@@ -46,6 +47,7 @@
 ### Finite Horde Announcer/Tracker (l4d2_horde_equaliser)
 * Fetched fixes from [devilesk's version](https://github.com/devilesk/rl4d2l-plugins/blob/master/l4d2_horde_equaliser.sp)
 * Decreased the minimum value for audial feedback.
+* Added mega mob sound at the horde start.
 * Localized horde notifiers.
 ### Mix Manager (l4d2_mix)
 * Fetched from [its original repo by LuckyLock](https://github.com/LuckyServ/sourcemod-plugins/blob/master/source/l4d2_mix.sp)
@@ -57,8 +59,8 @@
 * Chooses randomly available tank models in the server (default one or the one appears in the trailer from The Sacrifice 1st chapter.)
 * Notifies and plays sound upon tank spawn. (To help players who turn off/lower music volume for better hearing infected.)
 ### Toxic Taunting Bots (l4d2_toxic_bots)
-* Bots can now taunt, cry via chat.
-* Several conditions can trigger every bot in the game. (ex. survivor is incapacitated, saferoom door closed, hit by tank rock, etc.)
+* Bots can now be salty via chat.
+* Several conditions can trigger every bot in the game. (ex. survivor is incapacitated, saferoom door closed, hit by tank rock, caught by AI special infected etc.)
 * Requires Tabun's l4d2_skill_detect plugin.
 ### Match Vote
 * Fetched [Sir's version](https://github.com/SirPlease/SirCoding/blob/master/PublicSourceSP/Old%20(2014%20and%20Earlier)/match_vote.sp)
@@ -68,15 +70,15 @@
 * Fetched fixes from [devilesk's version](https://github.com/devilesk/rl4d2l-plugins/blob/master/pause.sp)
 * Added checkboxes to team status panel.
 * Localized team status panel and chat outputs.
-### playermanagement - Spectate & Swap Players
+### Spectate & Swap Players (playermanagement)
 * Fetched fixes from [devilesk's version](https://github.com/devilesk/rl4d2l-plugins/blob/master/playermanagement.sp)
 * Localized spectate line
 ### Improved ReadyUp
 * Fetched fixes from [devilesk's version](https://github.com/devilesk/rl4d2l-plugins/blob/master/readyup.sp)
 * Added checkboxes from Sir's ZoneMod version.
-* Added date and time to the panel.
-* Added playtime to the panel.
-* Localized the panel and !speckick command outputs.
+* Added system date and time to the panel.
+* Added matchmode playtime to the panel.
+* Localized the panel and !speckick vote outputs.
 ### Hyper-V HUD Manager (spechud)
 * Fetched fixes from [devilesk's version](https://github.com/devilesk/rl4d2l-plugins/blob/master/spechud.sp)
 * Localized the panel.
@@ -86,7 +88,7 @@
 * Edited console output.
 ### Speaking List (speaklist)
 * Fetched from [its original repo by Harry Potter](https://github.com/fbef0102/L4D1-Competitive-Plugins/tree/master/SpeakingList)
-* Spectators can no longer see if someone in survivors or infected is speaking regardless of sv_alltalk value
+* Spectators can no longer see if someone from survivors or infected is speaking regardless of sv_alltalk value
 ### L4D2 Tank Rock Glow
 * Fetched from [its original AlliedModders page](https://forums.alliedmods.net/showthread.php?p=2675889)
-* Prevented survivors from seeing the glow
+* Prevented survivors from seeing the glow. (Thanks Marttt)
