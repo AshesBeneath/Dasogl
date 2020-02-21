@@ -251,6 +251,6 @@ public CVS_ConVarChange(Handle:convar, const String:oldValue[], const String:new
 	{
 		decl String:name[CVS_CVAR_MAXLEN];
 		GetConVarName(convar, name, sizeof(name));
-		CPrintToChatAll("{lightgreen}★ {default}Ayar değişimi tespit edildi: \"{olive}%s{default}\" değiştirildi: \"{green}%s{default}\" -> \"{green}%s{default}\"", name, oldValue, newValue);
+		CPrintToChatAll("{blue}[{default}Confogl{blue}] {default}Tracked Server CVar \"{green}%s{default}\" changed from \"{blue}%s{default}\" to \"{blue}%s{default}\"", name, oldValue, newValue);
 	}
 }

@@ -89,13 +89,13 @@ public OnClientConnected(client)
 public Action:ToggleSpecHudCmd(client, args) 
 {
 	bSpecHudActive[client] = !bSpecHudActive[client];
-	CPrintToChat(client, "{lightgreen}★ {olive}SpecHUD - %s.", (bSpecHudActive[client] ? "{blue}AÇIK{default}" : "{red}KAPALI{default}"));
+	CPrintToChat(client, "{olive}SpecHUD - %s.", (bSpecHudActive[client] ? "{blue}AÇIK{default}" : "{red}KAPALI{default}"));
 }
 
 public Action:ToggleTankHudCmd(client, args) 
 {
 	bTankHudActive[client] = !bTankHudActive[client];
-	CPrintToChat(client, "{lightgreen}★ {olive}TankHUD - %s.", (bTankHudActive[client] ? "{blue}AÇIK{default}" : "{red}KAPALI{default}"));
+	CPrintToChat(client, "{olive}TankHUD - %s.", (bTankHudActive[client] ? "{blue}AÇIK{default}" : "{red}KAPALI{default}"));
 }
 
 public Action:HudDrawTimer(Handle:hTimer) 
@@ -132,7 +132,7 @@ public Action:HudDrawTimer(Handle:hTimer)
 			if (!bSpecHudHintShown[i])
 			{
 				bSpecHudHintShown[i] = true;
-				CPrintToChat(i, "{lightgreen}★  {green}!spechud{default} yazarak izleyici panelini açıp kapatabilirsiniz.");
+				CPrintToChat(i, "{green}!spechud{default} yazarak izleyici panelini açıp kapatabilirsiniz.");
 			}
 		}
 
@@ -155,7 +155,7 @@ public Action:HudDrawTimer(Handle:hTimer)
 		if (!bTankHudHintShown[i])
 		{
 			bTankHudHintShown[i] = true;
-			CPrintToChat(i, "{lightgreen}★ {green}!tankhud{default} yazarak Tank kontrol panelini açıp kapatabilirsiniz.");
+			CPrintToChat(i, "{green}!tankhud{default} yazarak Tank kontrol panelini açıp kapatabilirsiniz.");
 		}
 	}
 
@@ -171,7 +171,7 @@ FillHeaderInfo(Handle:hSpecHud)
 	DrawPanelText(hSpecHud, "Izleyici Paneli");
 
 	decl String:buffer[512];
-	Format(buffer, sizeof(buffer), "Kontenjan %i/%i || Tickrate %i", GetRealClientCount(), GetConVarInt(FindConVar("sv_maxplayers")), RoundToNearest(1.0 / GetTickInterval()));
+	Format(buffer, sizeof(buffer), "Slot %i/%i || Tickrate %i", GetRealClientCount(), GetConVarInt(FindConVar("sv_maxplayers")), RoundToNearest(1.0 / GetTickInterval()));
 	DrawPanelText(hSpecHud, buffer);
 }
 

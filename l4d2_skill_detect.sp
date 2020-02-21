@@ -508,7 +508,7 @@ public OnPluginStart()
     
     // cvars: config
     
-    g_hCvarReport = CreateConVar(           "sm_skill_report_enable" ,      "0", "Whether to report in chat (see sm_skill_report_flags).", FCVAR_PLUGIN, true, 0.0, true, 1.0 );
+    g_hCvarReport = CreateConVar(           "sm_skill_report_enable" ,      "1", "Whether to report in chat (see sm_skill_report_flags).", FCVAR_PLUGIN, true, 0.0, true, 1.0 );
     g_hCvarReportFlags = CreateConVar(      "sm_skill_report_flags" ,       REP_DEFAULT, "What to report skeets in chat (bitflags: 1,2:skeets/hurt; 4,8:level/chip; 16,32:crown/draw; 64,128:cut/selfclear, ... ).", FCVAR_PLUGIN, true, 0.0 );
     
     g_hCvarAllowMelee = CreateConVar(       "sm_skill_skeet_allowmelee",    "1", "Whether to count/forward melee skeets.", FCVAR_PLUGIN, true, 0.0, true, 1.0 );

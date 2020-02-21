@@ -80,7 +80,7 @@ new Handle:cvar_witch_true_damage;
 
 public Plugin:myinfo = 
 {
-    name = "Witch Damage Announce [TR]",
+    name = "Witch Damage Announce",
     author = "Sir",
     description = "Print Witch Damage to chat",
     version = "1.2",
@@ -170,7 +170,7 @@ public WitchDeath_Event(Handle:event, const String:name[], bool:dontBroadcast)
     //Check if Tank Killed the Witch.
     if (IsValidClient(killer) && GetClientTeam(killer) == 3 && IsTank(killer))
     {
-        CPrintToChatAll("{lightgreen}★ {green}%N {default}kontrolündeki Tank cadıyı öldürdü!!!", killer);
+        CPrintToChatAll("{blue}[{default}Boss Hasar{blue}] {default}Tank ({olive}%N{default}) cadıyı öldürdü!", killer);
         bWitchSpawned = false;
         ClearDamage();
         return;
@@ -225,14 +225,14 @@ CalculateWitch()
 
 PrintWitchRemainingHealth()
 {
-    CPrintToChatAll("{lightgreen}★ {default}Cadının kalan HP: %d ", RoundToFloor(g_fWitchHealth) - DamageWitchTotal);
+    CPrintToChatAll("{blue}[{default}Boss Hasar{blue}] {default}Cadının kalan HP: {olive}%d", RoundToFloor(g_fWitchHealth) - DamageWitchTotal);
 }
 
 PrintWitchDamage()
 {
     if (!bWitchSpawned)
     {
-        CPrintToChatAll("{lightgreen}★ {default}Cadıya verilmiş hasar oranları :");
+        CPrintToChatAll("{blue}[{default}Boss Hasar{blue}] {default}Cadı gebertildi. Hasarlar:");
     }
     
     new client;

@@ -99,7 +99,7 @@ public _EnforceCliSettings_QueryReply(QueryCookie:cookie, client, ConVarQueryRes
 	if(result)
 	{
 		LogMessage("[Confogl] ClientSettings: Couldn't retrieve cvar %s from %L, kicked from server", cvarName, client);
-		KickClient(client, "%s ayarinizin degeri tespit edilemedi.", cvarName);
+		KickClient(client, "CVar '%s' protected or missing! Hax?", cvarName);
 		return;
 	}
 	new Float:fCvarVal = StringToFloat(cvarValue);
@@ -116,8 +116,8 @@ public _EnforceCliSettings_QueryReply(QueryCookie:cookie, client, ConVarQueryRes
 			{
 				LogMessage("[Confogl] ClientSettings: Kicking %L for bad %s value (%f). Min: %d %f Max: %d %f", \
 					client, cvarName, fCvarVal, clsetting[CLSE_hasMin], clsetting[CLSE_min], clsetting[CLSE_hasMax], clsetting[CLSE_max]);
-				CPrintToChatAll("{lightgreen}★ {olive}%L {default}yasaklı ayar bulunduğu için atıldı ({green}%s %f{default})", client, cvarName, fCvarVal);
-				new String:kickMessage[256] = "Yasakli ayar bulundu: ";
+				CPrintToChatAll("{blue}[{default}Confogl{blue}] {olive}%L {default} was kicked for having an illegal value for {green}%s {blue}({default}%f{blue})", client, cvarName, fCvarVal);
+				new String:kickMessage[256] = "Illegal Client Value for ";
 				Format(kickMessage, sizeof(kickMessage), "%s%s (%.2f)", kickMessage, cvarName, fCvarVal);
 				if (clsetting[CLSE_hasMin])
 					Format(kickMessage, sizeof(kickMessage), "%s, Min %.2f", kickMessage, clsetting[CLSE_min]);

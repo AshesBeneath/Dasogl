@@ -40,7 +40,7 @@ new Handle:fwdOnTankDeath                = INVALID_HANDLE;
 
 public Plugin:myinfo =
 {
-	name = "Tank Damage Announce L4D2 [TR]",
+	name = "Tank Damage Announce L4D2",
 	author = "Griffin and Blade",
 	description = "Announce damage dealt to tanks by survivors",
 	version = "0.6.6",
@@ -223,9 +223,9 @@ PrintRemainingHealth()
 	if (!tankclient) return;
 	
 	decl String:name[MAX_NAME_LENGTH];
-	if (IsFakeClient(tankclient)) name = "AI";
+	if (IsFakeClient(tankclient)) name = "Bot";
 	else GetClientName(tankclient, name, sizeof(name));
-	CPrintToChatAll("{lightgreen}★ {default}Tank ({olive}%s{default}) kalan HP : {green}%d ", name, g_iLastTankHealth);
+	CPrintToChatAll("{blue}[{default}Boss Hasar{blue}] {green}%s {default}kontrolündeki Tank kalan HP: {olive}%d", name, g_iLastTankHealth);
 }
 
 PrintTankDamage()
@@ -240,11 +240,11 @@ PrintTankDamage()
 			{
 				decl String:name[MAX_NAME_LENGTH];
 				GetClientName(i, name, sizeof(name));
-				CPrintToChatAll("{lightgreen}★ {default}Tank ({olive}%s{default}) verilen hasar oranları:", name);
+				CPrintToChatAll("{blue}[{default}Boss Hasar{blue}] {green}%s {default}kontrolündeki Tank gebertildi. Hasarlar:", name);
 				g_iWasTank[i] = 0;
 			}
 			else if(g_iWasTankAI > 0) 
-				CPrintToChatAll("{lightgreen}★ {default}Tank ({olive}AI{default}) verilen hasar oranları:");
+				CPrintToChatAll("{blue}[{default}Boss Hasar{blue}] {default}Tank gebertildi. Hasarlar:");
 			g_iWasTankAI = 0;
 		}
 	}

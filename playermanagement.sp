@@ -8,11 +8,11 @@
 
 public Plugin:myinfo =
 {
-	name = "Player Management Plugin [TR]",
+	name = "Player Management Plugin",
 	author = "CanadaRox",
 	description = "Player management!  Swap players/teams and spectate!",
 	version = "7",
-	url = "https://github.com/AshesBeenath/Dasogl"
+	url = ""
 };
 
 enum L4D2Team
@@ -125,7 +125,7 @@ public Action:Spectate_Cmd(client, args)
 	new L4D2Team:team = GetClientTeamEx(client);
 	if (!GetConVarBool(l4d_pm_supress_spectate) && team != L4D2Team_Spectator && SpecTimer[client] == INVALID_HANDLE)
 	{
-		CPrintToChatAllEx(client, "{teamcolor}%N{default} izleyicilere geçti", client);
+		CPrintToChatAllEx(client, "{teamcolor}%N{default} izleyicilere geçti.", client);
 	}
 	if (team == L4D2Team_Survivor)
 	{

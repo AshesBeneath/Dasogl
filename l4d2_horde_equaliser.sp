@@ -6,7 +6,7 @@
 #include <l4d2lib>
 #include <colors>
 
-#define HORDE_MIN_SIZE_AUDIAL_FEEDBACK	10
+#define HORDE_MIN_SIZE_AUDIAL_FEEDBACK	120
 #define MAX_CHECKPOINTS					4
 
 #define HORDE_SOUND	"/npc/mega_mob/mega_mob_incoming.wav"
@@ -26,11 +26,11 @@ new bool:checkpointAnnounced[MAX_CHECKPOINTS];
 
 public Plugin:myinfo = 
 {
-	name = "L4D2 Horde Equaliser [TR]",
-	author = "Visor, Sir, devilesk, AshesBeneath",
+	name = "L4D2 Horde Equaliser",
+	author = "Visor (original idea by Sir)",
 	description = "Make certain event hordes finite",
-	version = "3.0.7b",
-	url = "https://github.com/devilesk/rl4d2l-plugins"
+	version = "3.0.7",
+	url = "https://github.com/Attano/Equilibrium"
 };
 
 public OnPluginStart()
@@ -50,7 +50,7 @@ public OnPluginStart()
 	hCvarNoEventHordeDuringTanks = CreateConVar("l4d2_heq_no_tank_horde", "0", "Put infinite hordes on a 'hold up' during Tank fights");
 	hCvarHordeCheckpointAnnounce = CreateConVar("l4d2_heq_checkpoint_sound", "1", "Play the incoming mob sound at checkpoints (each 1/4 of total commons killed off) to simulate L4D1 behaviour");
 
-	HookEvent("round_start", EventHook:RoundStartEvent, EventHookMode_PostNoCopy);
+	HookEvent("round_start", EventHook:OnRoundStart, EventHookMode_PostNoCopy);
 }
 
 public OnMapStart()
@@ -61,7 +61,7 @@ public OnMapStart()
 	PrecacheSound(HORDE_SOUND);
 }
 
-public RoundStartEvent()
+public OnRoundStart()
 {
 	commonTotal = 0;
 	lastCheckpoint = 0;
@@ -96,7 +96,7 @@ public OnEntityCreated(entity, const String:classname[])
 		{
 			if (commonLimit >= HORDE_MIN_SIZE_AUDIAL_FEEDBACK) EmitSoundToAll(HORDE_SOUND);
 			new remaining = commonLimit - commonTotal;
-			if (remaining != 0) CPrintToChatAll("{lightgreen}★ {olive}%i {default}zombi kaldı", remaining);
+			if (remaining != 0) CPrintToChatAll("{blue}[{default}Horde{blue}] {olive}%i {default}zombi kaldı.", remaining);
 			checkpointAnnounced[lastCheckpoint] = true;
 			lastCheckpoint++;
 		}
@@ -134,8 +134,8 @@ public Action:L4D_OnSpawnMob(&amount)
 	{
 		if (!announcedInChat)
 		{
-			CPrintToChatAll("{lightgreen}★ {green}%i {default}zombiden oluşan {olive}sınırlı horde {default}başlatıldı.", commonLimit);
 			EmitSoundToAll(HORDE_SOUND);
+			CPrintToChatAll("{blue}[{default}Horde{blue}] {olive}%i{default} zombiden oluşan {green}sınırlı horde {default}başlatıldı.", commonLimit);
 			announcedInChat = true;
 		}
 		

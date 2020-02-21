@@ -4,7 +4,7 @@
 #include <builtinvotes>
 #include <sdktools>
 
-#define			RM_DEBUG					1
+#define			RM_DEBUG					0
 
 #define			RM_DEBUG_PREFIX			"[ReqMatch]"
 
@@ -146,11 +146,11 @@ RM_Match_Load()
 	RM_bIsMatchModeLoaded = true;
 	IsPluginEnabled(true,true);
 	
-	CPrintToChatAll("{lightgreen}★ {default}Maç Modu Yüklendi!");
+	CPrintToChatAll("{blue}[{default}confogl{blue}] {default}Modül aktifleştirildi!");
 	
 	if(!RM_bIsMapRestarted && GetConVarBool(RM_hDoRestart))
 	{
-		CPrintToChatAll("{lightgreen}★ {default}Harita yeniden başlatılıyor!");
+		CPrintToChatAll("{blue}[{default}confogl{blue}] {default}Harita yeniden başlatılıyor...");
 		CreateTimer(MAPRESTARTTIME,RM_Match_MapRestart_Timer);
 	}
 	
@@ -165,7 +165,7 @@ RM_Match_Unload(bool:bForced=false)
 	if(!IsHumansOnServer() || bForced)
 	{
 		if(RM_DEBUG || IsDebugEnabled())
-			LogMessage("%s Match is no longer active, sb_all_bot_game reset to 0, IsHumansOnServer %b, bForced %b",RM_DEBUG_PREFIX,IsHumansOnServer(),bForced);
+			LogMessage("%s Match ís no longer active, sb_all_bot_game reset to 0, IsHumansOnServer %b, bForced %b",RM_DEBUG_PREFIX,IsHumansOnServer(),bForced);
 		
 		RM_bIsAMatchActive = false;
 		SetConVarInt(FindConVar("sb_all_bot_game"),0);
@@ -185,7 +185,7 @@ RM_Match_Unload(bool:bForced=false)
 	Call_StartForward(RM_hFwdMatchUnload);
 	Call_Finish();	
 
-	CPrintToChatAll("{lightgreen}★ {default}Maç Modu Kapatıldı!");
+	CPrintToChatAll("{blue}[{default}confogl{blue}] {default}Config kapatıldı, modül pasif duruma alınıyor...");
 	
 	GetConVarString(RM_hConfigFile_Off,sBuffer,sizeof(sBuffer));
 	ExecuteCfg(sBuffer);
@@ -212,7 +212,7 @@ RM_UpdateCfgOn(const String:cfgfile[])
 {
 	if(SetCustomCfg(cfgfile))
 	{
-		CPrintToChatAll("{lightgreen}★ {olive}%s {default}yükleniyor...", cfgfile);
+		CPrintToChatAll("{blue}[{default}confogl{blue}] {default}Modül {olive}%s {default}ayarıyla aktif duruma getiriliyor...", cfgfile);
 		RM_Match_Load();
 
 		if(RM_DEBUG || IsDebugEnabled())
@@ -240,7 +240,7 @@ public Action:RM_Cmd_ForceMatch(client, args)
 	}
 	else
 	{
-		CPrintToChat(client, "{lightgreen}★ {default}Lütfen komuttan sonra bir maç modu cfg adı belirtiniz.");
+		CPrintToChat(client, "{blue}[{default}Confogl{blue}] {default}Please specify a {olive}Config {default}to load.");
 	}
 	
 	return Plugin_Handled;

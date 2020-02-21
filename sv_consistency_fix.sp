@@ -14,7 +14,7 @@ new Handle:hCvarServerMessage;
 
 public Plugin:myinfo =
 {
-	name = "sv_consistency fixes [TR]",
+	name = "sv_consistency fixes",
 	author = "step, Sir",
 	description = "Fixes multiple sv_consistency issues.",
 	version = PLUGIN_VERSION,
@@ -23,14 +23,12 @@ public Plugin:myinfo =
 
 public OnPluginStart()
 {
-	SetConVarFlags(FindConVar("sv_steamgroup"), GetConVarFlags(FindConVar("sv_steamgroup")) | FCVAR_PROTECTED);
-	
 	if (!FileExists("whitelist.cfg"))
 	{
 		SetFailState("Couldn't find whitelist.cfg");
 	}
 	
-	hCvarServerMessage = CreateConVar("soundm_server_message", "DASOGL", "Message to show to Players in console");
+	hCvarServerMessage = CreateConVar("soundm_server_message", "DASOGL Competitive Environment", "Message to show to Players in console");
 
 	HookEvent("player_connect_full", Event_PlayerConnectFull, EventHookMode_Post);
 	RegAdminCmd("sm_consistencycheck", Command_ConsistencyCheck, ADMFLAG_RCON, "Performs a consistency check on all players.", "", FCVAR_PLUGIN);
@@ -53,15 +51,14 @@ public Action:PrintWhitelist(Handle:timer, any:userid)
 
 	PrintToConsole(client, " ");
 	PrintToConsole(client, " ");
-	PrintToConsole(client, "------------------------------------------");
-	PrintToConsole(client, "// %s - Sound Cache Check \\", sMessage);
-	PrintToConsole(client, "* Selamün Aleyküm %N reyiz, Hoşgeldin", client);
-	PrintToConsole(client, "* Az önce tüm ses dosyaların tarandı");
-	PrintToConsole(client, "* Bu tarama nolur nolmaz 180 saniyede bir");
-	PrintToConsole(client, "otomatik tekrarlanacaktır");
-	PrintToConsole(client, "* Eğer kick yemediysen bir sıkıntı yok demektir.");
-	PrintToConsole(client, "* Iyi Oyunlar Dileriz");
-	PrintToConsole(client, "------------------------------------------");
+	PrintToConsole(client, "--------------------------------------");
+	PrintToConsole(client, "|");
+	PrintToConsole(client, "| Welcome to %s", sMessage);
+	PrintToConsole(client, "| Your Sound Files have been checked. ");
+	PrintToConsole(client, "| Don't be a filthy Cheater.");
+	PrintToConsole(client, "| Enjoy your Stay, or don't.");
+	PrintToConsole(client, "|");
+	PrintToConsole(client, "--------------------------------------");
 	PrintToConsole(client, " ");
 	PrintToConsole(client, " ");
 }
@@ -123,7 +120,7 @@ public OnClientDisconnect(client)
 {
 	if (bTimerCheater[client])
 	{
-		CPrintToChatAll("{lightreen}★ {default}%N adlı kişide değiştirilmiş ses dosyaları tespit edildi.", client);
+		CPrintToChatAll("{blue}[{default}SoundM{blue}]{default}: Modified Sound Files detected on {olive}%N", client);
 		bTimerCheater[client] = false;
 	}
 }

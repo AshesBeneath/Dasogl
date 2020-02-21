@@ -11,7 +11,7 @@
 
 public Plugin:myinfo =
 {
-	name = "L4D2 Boss Flow Announce [TR]",
+	name = "L4D2 Boss Flow Announce",
 	author = "ProdigySim, Jahze, Stabby, CircleSquared, CanadaRox, Visor, Sir, devilesk, AshesBeneath",
 	version = "1.7",
 	description = "Announce boss flow percents!",
@@ -180,11 +180,11 @@ public Action:AddReadyFooter(Handle:timer)
 	{
 		decl String:readyString[65];
 		if (iWitchPercent && iTankPercent)
-			Format(readyString, sizeof(readyString), "Tank: %d%%   Cadi: %d%%", iTankPercent, iWitchPercent);
+			Format(readyString, sizeof(readyString), "Tank: %d%%   Witch: %d%%", iTankPercent, iWitchPercent);
 		else if (iTankPercent)
 			Format(readyString, sizeof(readyString), "Tank: %d%%", iTankPercent);
 		else if (iWitchPercent)
-			Format(readyString, sizeof(readyString), "Cadi: %d%%", iWitchPercent);
+			Format(readyString, sizeof(readyString), "Witch: %d%%", iWitchPercent);
 		else
 			Format(readyString, sizeof(readyString), "");
 		AddStringToReadyFooter(readyString);
@@ -194,7 +194,6 @@ public Action:AddReadyFooter(Handle:timer)
 
 stock PrintBossPercents(client)
 {
-	FakeClientCommand(client, "sm_tankpool");
 	FakeClientCommand(client, "sm_current");
 	CreateTimer(0.1, PrintStuff, client);
 	return 0;
@@ -206,17 +205,17 @@ public Action:PrintStuff(Handle:timer, any:client)
 		if(GetConVarBool(hCvarTankPercent))
 		{
 			if (iTankPercent)
-				CPrintToChat(client, "{lightgreen}★ {olive}Tank {default}: {green}%d%%", iTankPercent);
+				CPrintToChat(client, "{blue}[{default}Boss{blue}] {olive}Tank: {green}%d%%", iTankPercent);
 			else
-				CPrintToChat(client, "{lightgreen}★ {olive}Tank {default}: {green}Yok");
+				CPrintToChat(client, "{blue}[{default}Boss{blue}] {olive}Tank: {green}Yok");
 		}
 
 		if(GetConVarBool(hCvarWitchPercent))
 		{
 			if (iWitchPercent)
-				CPrintToChat(client, "{lightgreen}★ {olive}Cadı {default}: {green}%d%%", iWitchPercent);
+				CPrintToChat(client, "{blue}[{default}Boss{blue}] {olive}Cadı: {green}%d%%", iWitchPercent);
 			else
-				CPrintToChat(client, "{lightgreen}★ {olive}Cadı {default}: {green}Yok");
+				CPrintToChat(client, "{blue}[{default}Boss{blue}] {olive}Cadı: {green}Yok");
 		}
 	}
 }
@@ -263,19 +262,19 @@ public Action:VoteBoss_Cmd(client, args)
 	{
 		if (IsDKR())
 		{
-			CPrintToChat(client, "{blue}[{default}VoteBoss{blue}] {olive}Not Available on this Map.");
+			CPrintToChat(client, "{blue}[{default}VoteBoss{blue}] {olive}Not Available on Dark Carnival Remix");
 			return Plugin_Handled;
 		}
 		if (args != 2 || !IsInReady() || InSecondHalfOfRound())
 		{
 			if (!IsInReady() || InSecondHalfOfRound())
 			{
-				CPrintToChat(client, "{lightgreen}★ {default}Spawn değiştirimi sadece ilk turun ReadyUp sürecinde yapılabilir.");
+				CPrintToChat(client, "{blue}[{default}VoteBoss{blue}] {default}Spawn değiştirimi sadece ilk round ReadyUp sürecinde yapılabilir.");
 			}
 			else
 			{
-				CPrintToChat(client, "{lightgreen}★ {default}Kullanım : {olive}!voteboss <tank> <cadı>");
-				CPrintToChat(client, "{lightgreen}★ {default}Spawn olmamasını istiyorsanız {olive}0 {default}kullanınız.");
+				CPrintToChat(client, "{blue}[{default}VoteBoss{blue}] {default}Kullanım : {olive}!voteboss <tank> <cadı>");
+				CPrintToChat(client, "{blue}[{default}VoteBoss{blue}] {default}Spawn olmamasını istiyorsanız {olive}0 {default}kullanınız.");
 			}
 			return Plugin_Handled;
 		}
@@ -300,7 +299,7 @@ public Action:VoteBoss_Cmd(client, args)
 		}
 		if (iNumPlayers < 4)
 		{
-			CPrintToChat(client, "{lightgreen}★ {default}En az 4 oyuncu gereklidir.");
+			CPrintToChat(client, "{blue}[{default}VoteBoss{blue}] {default}En az 4 oyuncu gereklidir.");
 			return Plugin_Handled;
 		}
 		if (IsNewBuiltinVoteAllowed())
@@ -314,7 +313,7 @@ public Action:VoteBoss_Cmd(client, args)
 			DisplayBuiltinVote(g_hVote, iPlayers, iNumPlayers, 20);
 			return Plugin_Handled;
 		}
-		CPrintToChat(client, "{lightgreen}★ {default}Oylama şu an başlatılamaz.");
+		CPrintToChat(client, "{blue}[{default}VoteBoss{blue}] {default}Oylama şu an başlatılamaz.");
 	}
 	return Plugin_Handled;
 }
