@@ -76,8 +76,8 @@ public OnPluginStart()
 	RegConsoleCmd("sm_unready", Unready_Cmd, "Marks your team as ready for an unpause");
 	RegConsoleCmd("sm_toggleready", Toggleready_Cmd, "Marks your team as ready for an unpause");
 	
-	RegAdminCmd("sm_forcepause", ForcePause_Cmd, ADMFLAG_BAN, "Pauses the game and only allows admins to unpause");
-	RegAdminCmd("sm_forceunpause", ForceUnpause_Cmd, ADMFLAG_BAN, "Unpauses the game regardless of team ready status.  Must be used to unpause admin pauses");
+	RegAdminCmd("sm_fp", ForcePause_Cmd, ADMFLAG_BAN, "Pauses the game and only allows admins to unpause");
+	RegAdminCmd("sm_fs", ForceUnpause_Cmd, ADMFLAG_BAN, "Unpauses the game regardless of team ready status.  Must be used to unpause admin pauses");
 
 	AddCommandListener(Say_Callback, "say");
 	AddCommandListener(TeamSay_Callback, "say_team");
@@ -87,7 +87,7 @@ public OnPluginStart()
 	sv_pausable = FindConVar("sv_pausable");
 	sv_noclipduringpause = FindConVar("sv_noclipduringpause");
 
-	pauseDelayCvar = CreateConVar("sm_pausedelay", "0", "Delay to apply before a pause happens.  Could be used to prevent Tactical Pauses", FCVAR_PLUGIN, true, 0.0);
+	pauseDelayCvar = CreateConVar("sm_pausedelay", "1", "Delay to apply before a pause happens.  Could be used to prevent Tactical Pauses", FCVAR_PLUGIN, true, 0.0);
 
 	HookEvent("round_end", RoundEnd_Event, EventHookMode_PostNoCopy);
 	HookEvent("round_start", RoundStart_Event);
@@ -118,7 +118,7 @@ public OnClientPutInServer(client)
 	if (isPaused)
 	{
 		if (!IsFakeClient(client))
-			CPrintToChatAll("{lightgreen}★ {olive}%N {default}sunucuya tamamen bağlandı.", client);
+			CPrintToChatAll("{blue}[{default}pause{blue}] {olive}%N {default}sunucuya tamamen bağlandı.", client);
 	}
 }
 
@@ -175,7 +175,7 @@ public Action:Pause_Cmd(client, args)
 {
 	if ((!readyUpIsAvailable || !IsInReady()) && pauseDelay == 0 && !isPaused && IsPlayer(client) && !RoundEnd)
 	{
-		CPrintToChatAll("{lightgreen}★ {teamcolor}%N {default}oyunu duraklattı!!!", client);
+		CPrintToChatAll("{blue}[{default}pause{blue}] {default}Paused by {green}%N {default}!!!", client);
 		pauseDelay = GetConVarInt(pauseDelayCvar);
 		if (pauseDelay == 0)
 			AttemptPause();
@@ -189,13 +189,13 @@ public Action:PauseDelay_Timer(Handle:timer)
 {
 	if (pauseDelay == 0)
 	{
-		CPrintToChatAll("{lightgreen}★ {default}Oyun duraklatıldı!!!");
+		CPrintToChatAll("{blue}[{default}pause{blue}] {default}Oyun duraklatıldı!!!");
 		AttemptPause();
 		return Plugin_Stop;
 	}
 	else
 	{
-		CPrintToChatAll("{lightgreen}★ {olive}%d {default}saniye sonra oyun duraklatılacak!!!", pauseDelay);
+		CPrintToChatAll("{blue}[{default}pause{blue}] {olive}%d {default}saniye sonra oyun duraklatılacak!!!", pauseDelay);
 		pauseDelay--;
 	}
 	return Plugin_Continue;
@@ -210,11 +210,11 @@ public Action:Unpause_Cmd(client, args)
 		{
 			if (GetClientTeam(client) == 2)
 			{
-				CPrintToChatAll("{lightgreen}★ {green}%N {default}, {olive}%s {default}tarafını {olive}HAZIR {default}olarak işaretledi.", client, teamString[GetClientTeam(client)]);
+				CPrintToChatAll("{blue}[{default}pause{blue}] {green}%N {default}: {olive}%s {default}HAZIR", client, teamString[GetClientTeam(client)]);
 			}
 			else
 			{
-				CPrintToChatAll("{lightgreen}★ {green}%N {default}, {olive}%s {default}tarafını {olive}HAZIR {default}olarak işaretledi.", client, teamString[GetClientTeam(client)]);
+				CPrintToChatAll("{blue}[{default}pause{blue}] {green}%N {default}: {olive}%s {default}HAZIR", client, teamString[GetClientTeam(client)]);
 			}
 		}
 		teamReady[clientTeam] = true;
@@ -235,11 +235,11 @@ public Action:Unready_Cmd(client, args)
 		{
 			if (GetClientTeam(client) == 2)
 			{
-				CPrintToChatAll("{lightgreen}★ {green}%N {default}, {olive}%s {default}tarafını {olive}HAZIR DEĞİL {default}olarak işaretledi.", client, teamString[GetClientTeam(client)]);
+				CPrintToChatAll("{blue}[{default}pause{blue}] {green}%N {default}: {olive}%s {default}HAZIR DEĞİL", client, teamString[GetClientTeam(client)]);
 			}
 			else
 			{
-				CPrintToChatAll("{lightgreen}★ {green}%N {default}, {olive}%s {default}tarafını {olive}HAZIR DEĞİL {default}olarak işaretledi", client, teamString[GetClientTeam(client)]);
+				CPrintToChatAll("{blue}[{default}pause{blue}] {green}%N {default}: {olive}%s {default}HAZIR DEĞİL", client, teamString[GetClientTeam(client)]);
 			}
 		}
 		teamReady[clientTeam] = false;
@@ -257,11 +257,11 @@ public Action:Toggleready_Cmd(client, args)
 		{
 			if (GetClientTeam(client) == 2)
 			{
-				CPrintToChatAll("{lightgreen}★ {green}%N {default}, {olive}%s {default}tarafını {olive}HAZIR DEĞİL {default}olarak işaretledi.", client, teamString[GetClientTeam(client)]);
+				CPrintToChatAll("{blue}[{default}pause{blue}] {green}%N {default}: {olive}%s {default}HAZIR DEĞİL (adam !toggleready kullandı vay)", client, teamString[GetClientTeam(client)]);
 			}
 			else
 			{
-				CPrintToChatAll("{lightgreen}★ {green}%N {default}, {olive}%s {default}tarafını {olive}HAZIR DEĞİL {default}olarak işaretledi", client, teamString[GetClientTeam(client)]);
+				CPrintToChatAll("{blue}[{default}pause{blue}] {green}%N {default}: {olive}%s {default}HAZIR DEĞİL (adam !toggleready kullandı vay)", client, teamString[GetClientTeam(client)]);
 			}
 			teamReady[clientTeam] = false;
 			CancelFullReady(client);
@@ -272,11 +272,11 @@ public Action:Toggleready_Cmd(client, args)
 			{
 				if (GetClientTeam(client) == 2)
 				{
-					CPrintToChatAll("{lightgreen}★ {green}%N {default}, {olive}%s {default}tarafını {olive}HAZIR {default}olarak işaretledi.", client, teamString[GetClientTeam(client)]);
+					CPrintToChatAll("{blue}[{default}pause{blue}] {green}%N {default}: {olive}%s {default}HAZIR (adam !toggleready kullandı vay)", client, teamString[GetClientTeam(client)]);
 				}
 				else
 				{
-					CPrintToChatAll("{lightgreen}★ {green}%N {default}, {olive}%s {default}tarafını {olive}HAZIR {default}olarak işaretledi.", client, teamString[GetClientTeam(client)]);
+					CPrintToChatAll("{blue}[{default}pause{blue}] {green}%N {default}: {olive}%s {default}HAZIR (adam !toggleready kullandı vay)", client, teamString[GetClientTeam(client)]);
 				}
 				teamReady[clientTeam] = true;
 				if (CheckFullReady())
@@ -316,7 +316,7 @@ AttemptPause()
 		}
 		else
 		{
-			CPrintToChatAll("{lightgreen}★ {default}Oyunu duraklatma süreci, spawndan dolayı ertelendi.");
+			CPrintToChatAll("{blue}[{default}pause{blue}] {default}Bug olmaması için duraklatma ertelendi.");
 			deferredPauseTimer = CreateTimer(0.1, DeferredPause_Timer, _, TIMER_REPEAT);
 		}
 	}
@@ -358,7 +358,7 @@ Pause()
 				{
 					buttons &= -IN_JUMP;
 					SetClientButtons(client, buttons);
-					CPrintToChat(client, "{lightgreen}★ {default}Duraklatma sürecinden dolayı spawnınız engellendi.");
+					CPrintToChat(client, "{blue}[{default}pause{blue}] {default}Bug olmaması için duraklatma ertelendi.");
 				}
 			}
 			if(!pauseProcessed)
@@ -424,7 +424,7 @@ UpdatePanel()
 
 	menuPanel = CreatePanel();
 
-	DrawPanelText(menuPanel, "Takım Durumları:");
+	DrawPanelText(menuPanel, "->1. Takimlar Devam Etmek Icin Hazir mi?:");
 	DrawPanelText(menuPanel, teamReady[L4D2Team_Survivor] ? "->☑ Sag Kalanlar" : "->☐ Sag Kalanlar");
 	DrawPanelText(menuPanel, teamReady[L4D2Team_Infected] ? "->☑ Enfekteler" : "->☐ Enfekteler");
 
@@ -441,7 +441,7 @@ InitiateLiveCountdown()
 {
 	if (readyCountdownTimer == INVALID_HANDLE)
 	{
-		CPrintToChatAll("{lightgreen}★ {default}Iptal etmek için {olive}!unready {default}yazınız.");
+		CPrintToChatAll("{blue}[{default}pause{blue}] {default}Iptal etmek için {olive}!unready {default}yazınız.");
 		readyDelay = 3;
 		readyCountdownTimer = CreateTimer(1.0, ReadyCountdownDelay_Timer, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 	}
@@ -458,7 +458,7 @@ public Action:ReadyCountdownDelay_Timer(Handle:timer)
 	}
 	else
 	{
-		CPrintToChatAll("{lightgreen}★ {olive}%d {default}saniye içinde oyun devam edecek!!!", readyDelay);
+		CPrintToChatAll("{blue}[{default}pause{blue}] {green}%d...", readyDelay);
 		readyDelay--;
 	}
 	return Plugin_Continue;
@@ -470,7 +470,7 @@ CancelFullReady(client)
 	{
 		CloseHandle(readyCountdownTimer);
 		readyCountdownTimer = INVALID_HANDLE;
-		CPrintToChatAll("{lightgreen}★ {green}%N {default}geri sayımı iptal etti!", client);
+		CPrintToChatAll("{blue}[{default}pause{blue}] {olive}%N {default}geri sayımı iptal etti!", client);
 	}
 }
 
@@ -478,12 +478,12 @@ public Action:Callvote_Callback(client, String:command[], argc)
 {
 	if (GetClientTeam(client) == 1)
 	{
-		CPrintToChat(client, "{lightgreen}★ {default}Iyi deneme, kimi atacaktın xD");
+		CPrintToChat(client, "{blue}[{default}pause{blue}] {default}Bi rahat dur yav.");
 		return Plugin_Handled;
 	}
 	if (IgnorePlayer[client] > 0)
 	{
-		CPrintToChat(client, "{lightgreen}★ {default}Az önce takım değiştirdin, oylama başlatabilmen için birkaç saniye bekleyiniz.");
+		CPrintToChat(client, "{blue}[{default}pause{blue}] {default}Az önce takım değiştirdin, oylama başlatabilmen için birkaç saniye bekleyiniz.");
 		return Plugin_Handled;
 	}
 	if (argc < 2)
@@ -526,7 +526,7 @@ public Action:Callvote_Callback(client, String:command[], argc)
 	{
 		return Plugin_Continue;
 	}
-	CPrintToChat(client, "{lightgreen}★ {default}Bu amdin sana naptı???", target);
+	CPrintToChat(client, "{blue}[{default}pause{blue}] {default}Bu amdin sana naptı???", target);
 	return Plugin_Handled;
 }
 

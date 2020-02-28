@@ -407,8 +407,8 @@ public Action:Cast_Cmd(client, args)
 		ChangeClientTeam(client, 1);
 	}
 	SetTrieValue(casterTrie, buffer, 1);
-	CPrintToChat(client, "{blue}[{default}Cast{blue}] {default}You have registered yourself as a caster");
-	CPrintToChat(client, "{blue}[{default}Cast{blue}] {default}Reconnect to make your Addons work.");
+	CPrintToChat(client, "{blue}[{default}readyup{blue}] {default}Tebrikler artık sen de bir castersın ^^");
+	CPrintToChat(client, "{blue}[{default}readyup{blue}] {default}Addonlarının çalışması için sunucuya tekrar bağlan.");
 	return Plugin_Handled;
 }
 
@@ -430,7 +430,7 @@ public Action:Caster_Cmd(client, args)
 		{
 			SetTrieValue(casterTrie, buffer, 1);
 			ReplyToCommand(client, "Registered %N as a caster", target);
-			CPrintToChat(client, "{blue}[{olive}!{blue}] {default}An Admin has registered you as a caster");
+			CPrintToChat(client, "{blue}[{default}readyup{blue}] {default}Amdin seni caster olarak kaydetti.");
 		}
 		else
 		{
@@ -487,8 +487,8 @@ public Action:NotCasting_Cmd(client, args)
 	{
 		GetClientAuthId(client, AuthId_Steam2, buffer, sizeof(buffer));
 		RemoveFromTrie(casterTrie, buffer);
-		CPrintToChat(client, "{blue}[{default}Reconnect{blue}] {default}You will be reconnected to the server..");
-		CPrintToChat(client, "{blue}[{default}Reconnect{blue}] {default}There's a black screen instead of a loading bar!");
+		CPrintToChat(client, "{blue}[{default}readyup{blue}] {default}Sunucuya tekrar bağlanacaksın...");
+		CPrintToChat(client, "{blue}[{default}readyup{blue}] {default}Siyah ekran görecen panik olma!");
 		CreateTimer(3.0, Reconnect, client);
 		return Plugin_Handled;
 	}
@@ -505,7 +505,7 @@ public Action:NotCasting_Cmd(client, args)
 		
 		if (!hasFlag)
 		{
-			ReplyToCommand(client, "Only admins can remove other casters. Use sm_notcasting without arguments if you wish to remove yourself.");
+			ReplyToCommand(client, "Diger casterları sadece amdin kaldırabilir. Kendini çıkarmak istiyorsan sm_notcasting / !notcasting yaz.");
 			return Plugin_Handled;
 		}
 		
@@ -745,11 +745,11 @@ UpdatePanel()
 	new String:stringTimer[32];
 	if (hours > 0)
 	{
-		Format(stringTimer, 32, "%02d saat %02d dakika %02d saniye", hours, mins, secs);
+		Format(stringTimer, 32, "%02d:%02d:%02d", hours, mins, secs);
 	}
 	else
 	{
-		Format(stringTimer, 32, "%02d dakika %02d saniye", mins, secs);
+		Format(stringTimer, 32, "%02d:%02d", mins, secs);
 	}
 
 	menuPanel = CreatePanel();
@@ -766,14 +766,14 @@ UpdatePanel()
 		GetConVarString(FindConVar("hostname"), ServerName, 64);
 	}
 	
-	//Tarih & Saat Formatı (AshesBeneath)
+	//Date'n Time & sarcastic Turkish 'have fun' term
 	decl String:tarihsaat[64];
-	FormatTime(tarihsaat, sizeof(tarihsaat), "%d/%m/%Y | %H:%M");
-	Format(tarihsaat, sizeof(tarihsaat), "▸ %s", tarihsaat);
+	FormatTime(tarihsaat, sizeof(tarihsaat), "%d/%m/%Y  %H:%M");
+	Format(tarihsaat, sizeof(tarihsaat), "IYI OYUNLAR PASALARRR\n%s", tarihsaat);
 	
 	GetConVarString(l4d_ready_cfg_name, cfgName, 32);
 	DrawPanelText(menuPanel, tarihsaat); //Tarih & Saat
-	Format(ServerBuffer, 128, "▸ Sunucu: %s \n▸ Kontenjan: %d/%d\n▸ Mod: %s\n▸ Mac Suresi: %s", ServerName, GetSeriousClientCount(), GetConVarInt(FindConVar("sv_maxplayers")), cfgName, stringTimer);
+	Format(ServerBuffer, 128, "Sunucu: %s [%d/%d]\nConfig: %s\nUptime: %s", ServerName, GetSeriousClientCount(), GetConVarInt(FindConVar("sv_maxplayers")), cfgName, stringTimer);
 	DrawPanelText(menuPanel, ServerBuffer);
 	DrawPanelText(menuPanel, " ");
 
@@ -799,7 +799,7 @@ UpdatePanel()
 					if (!inLiveCountdown) PrintHintText(client, "<< READY >>");
 					if (fTime - g_fButtonTime[client] > 15.0)
 					{
-						Format(nameBuf, 64, "->☑ %s (r verdi gitti)\n", nameBuf);
+						Format(nameBuf, 64, "->☑ %s [AFK]\n", nameBuf);
 					}
 					else
 					{
@@ -811,7 +811,7 @@ UpdatePanel()
 					if (!inLiveCountdown) PrintHintText(client, "<< NOT READY >>");
 					if (fTime - g_fButtonTime[client] > 15.0)
 					{
-						Format(nameBuf, 64, "->☐ %s (oyunu unuttu)\n", nameBuf);
+						Format(nameBuf, 64, "->☐ %s [AFK]\n", nameBuf);
 					}
 					else
 					{
@@ -891,7 +891,7 @@ UpdatePanel()
 		ReplaceString(specBuffer, 500, "#buy", "<- TROLL", true);
 		ReplaceString(specBuffer, sizeof(specBuffer), "#", "_");
 		if (playerCount > GetConVarInt(l4d_ready_max_players))
-			FormatEx(specBuffer, sizeof(specBuffer), "%d", specCount);
+			FormatEx(specBuffer, sizeof(specBuffer), "Izleyici Sayisi: %d", specCount);
 		DrawPanelText(menuPanel, specBuffer);
 	}
 	
