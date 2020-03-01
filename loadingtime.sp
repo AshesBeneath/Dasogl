@@ -20,6 +20,7 @@ public bool OnClientConnect(int client, char[] rejectmsg, int maxlen)
 	if (!IsFakeClient(client))
 	{
 		g_flTimeConnected[client] = GetEngineTime();
+		CPrintToChatAll("{olive}%N {default}yükleniyor...", client);
 	}
 
 	return true;
