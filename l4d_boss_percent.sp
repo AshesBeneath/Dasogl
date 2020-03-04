@@ -194,7 +194,6 @@ public Action:AddReadyFooter(Handle:timer)
 
 stock PrintBossPercents(client)
 {
-	FakeClientCommand(client, "sm_current");
 	CreateTimer(0.1, PrintStuff, client);
 	return 0;
 }
@@ -217,6 +216,7 @@ public Action:PrintStuff(Handle:timer, any:client)
 			else
 				CPrintToChat(client, "{blue}[{default}Boss{blue}] {olive}Cadı: {green}Yok");
 		}
+		FakeClientCommand(client, "sm_current");
 	}
 }
 
@@ -311,6 +311,7 @@ public Action:VoteBoss_Cmd(client, args)
 			SetBuiltinVoteInitiator(g_hVote, client);
 			SetBuiltinVoteResultCallback(g_hVote, VoteResultHandler);
 			DisplayBuiltinVote(g_hVote, iPlayers, iNumPlayers, 20);
+			CPrintToChatAll("{blue}[{default}VoteBoss{blue}] {olive}%N {default}yüzde değişimi için oylama başlattı: Tank: {green}%i%%  {default}Cadı: {green}%i%%", client, iTank, iWitch);
 			return Plugin_Handled;
 		}
 		CPrintToChat(client, "{blue}[{default}VoteBoss{blue}] {default}Oylama şu an başlatılamaz.");

@@ -70,7 +70,7 @@ public void OnNextFrame(int entity)
 		AcceptEntityInput(GlowRock, "StartGlowing");
 		SetEntProp(GlowRock, Prop_Send, "m_iGlowType", 3);
 		SetEntProp(GlowRock, Prop_Send, "m_nGlowRange", 5000);
-		int R = GetRandomInt(1, 255), G = GetRandomInt(1, 255), B = GetRandomInt(1, 255);
+		int R = 255, G = 255, B = 255; //Force white glow
 		SetEntProp(GlowRock, Prop_Send, "m_glowColorOverride", R + (G * 256) + (B * 65536));
 
 		TeleportEntity(GlowRock, Pos, Ang, NULL_VECTOR);

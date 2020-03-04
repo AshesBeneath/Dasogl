@@ -232,6 +232,7 @@ public Action:KickSpecs_Cmd(client, args)
 			SetBuiltinVoteInitiator(g_hVote, client);
 			SetBuiltinVoteResultCallback(g_hVote, SpecVoteResultHandler);
 			DisplayBuiltinVote(g_hVote, iPlayers, iNumPlayers, 20);
+			CPrintToChatAll("{green}[{red}!{green}] {olive}Izleyicileri atmak {default}için bir oylama başlatıldı.");
 			return Plugin_Continue;
 		}
 		CPrintToChat(client, "{lightgreen}★ {default}Lütfen biraz sonra tekrar deneyiniz.");
@@ -772,7 +773,7 @@ UpdatePanel()
 	Format(tarihsaat, sizeof(tarihsaat), "IYI OYUNLAR PASALARRR\n%s", tarihsaat);
 	
 	GetConVarString(l4d_ready_cfg_name, cfgName, 32);
-	DrawPanelText(menuPanel, tarihsaat); //Tarih & Saat
+	//DrawPanelText(menuPanel, tarihsaat); //Tarih & Saat
 	Format(ServerBuffer, 128, "Sunucu: %s [%d/%d]\nConfig: %s\nUptime: %s", ServerName, GetSeriousClientCount(), GetConVarInt(FindConVar("sv_maxplayers")), cfgName, stringTimer);
 	DrawPanelText(menuPanel, ServerBuffer);
 	DrawPanelText(menuPanel, " ");
@@ -941,6 +942,8 @@ InitiateReadyUp()
 
 	L4D2_CTimerStart(L4D2CT_VersusStartTimer, 99999.9);
 }
+
+
 
 InitiateLive(bool:real = true)
 {
