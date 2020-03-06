@@ -501,7 +501,7 @@ public bool IsSniper(const char[] weaponName)
     return StrEqual(weaponName, "sniper_awp")
         || StrEqual(weaponName, "sniper_military")
         || StrEqual(weaponName, "sniper_scout")
-		|| StrEqual(weaponName, "hunting_rifle");
+        || StrEqual(weaponName, "hunting_rifle");
 }
 
 public bool IsMiniGun(const char[] weaponName)
