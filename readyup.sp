@@ -758,6 +758,11 @@ UpdatePanel()
 	new String:ServerBuffer[128];
 	new String:ServerName[64];
 	new String:cfgName[32];
+	new String:sMap[64];
+	
+	GetCurrentMap(sMap, sizeof(sMap));
+        HangiHaritaLenMq(sMap, sMap, sizeof(sMap));
+	
 	if (bHostName)
 	{
 		GetConVarString(FindConVar("sn_main_name"), ServerName, 64);
@@ -776,6 +781,7 @@ UpdatePanel()
 	//DrawPanelText(menuPanel, tarihsaat); //Tarih & Saat
 	Format(ServerBuffer, 128, "Sunucu: %s [%d/%d]\nConfig: %s\nUptime: %s", ServerName, GetSeriousClientCount(), GetConVarInt(FindConVar("sv_maxplayers")), cfgName, stringTimer);
 	DrawPanelText(menuPanel, ServerBuffer);
+	DrawPanelText(menuPanel, sMap);
 	DrawPanelText(menuPanel, " ");
 
 	decl String:nameBuf[MAX_NAME_LENGTH*2];
@@ -1232,4 +1238,30 @@ stock Math_GetRandomInt(min, max)
 	}
 
 	return RoundToCeil(float(random) / (float(SIZE_OF_INT) / float(max - min + 1))) + min - 1;
+}
+
+bool HangiHaritaLenMq(const char[] mapId, char[] mapName, int iLength)
+{
+    KeyValues kv = new KeyValues("MapNames");
+
+    char sFile[PLATFORM_MAX_PATH];
+    BuildPath(Path_SM, sFile, sizeof(sFile), "configs/rup_maps.cfg");
+
+    if (!FileExists(sFile))
+    {
+        SetFailState("[GetMapName] \"%s\" not found!", sFile);
+        return false;
+    }
+
+    kv.ImportFromFile(sFile);
+
+    if (!kv.JumpToKey(mapId, false))
+    {
+        SetFailState("[GetMapName] Can't find map \"%s\" in \"%s\"!", mapId, sFile);
+        delete kv;
+        return false;
+    }
+    kv.GetString(NULL_STRING, mapName, iLength);
+    delete kv;
+    return true;
 }

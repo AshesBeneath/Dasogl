@@ -79,6 +79,14 @@ public void StartMix()
     Call_StartForward(mixStartedForward);
     Call_Finish();
     EmitSoundToAll("buttons/blip1.wav");
+    for (new c = 1; c <= MaxClients; c++)
+    {
+    	if (IsClientInGame(c) && GetClientTeam(c) == 1)
+	{
+		KickClient(c, "Mix yapiliyor. Slotlar acilince geri girersin.");
+	}
+    }
+    ServerCommand("sm_cvar sv_maxplayers 8");
 }
 
 public void StopMix()
@@ -91,6 +99,7 @@ public void StopMix()
     if (isPickingCaptain && captainVoteTimer != INVALID_HANDLE) {
         KillTimer(captainVoteTimer);
     }
+    ServerCommand("sm_cvar sv_maxplayers 30");
 }
 
 public void FakeClientCommandAll(char[] command)
@@ -119,7 +128,7 @@ public Action Cmd_OnPlayerJoinTeam(int client, const char[] command, int argc)
             GetClientAuthId(client, AuthId_SteamID64, authId, MAX_STR_LEN); 
 
             if (!hSwapWhitelist.GetValue(authId, allowedTeam) || allowedTeam != newTeam) {
-                CPrintToChat(client, "{lightgreen}★ {default}Takım kaptanı tarafından seçilmeden takımlara geçemezsiniz.");
+                CPrintToChat(client, "{blue}[{default}Mix{blue}] {default}Takım kaptanı tarafından seçilmeden takımlara geçemezsiniz.");
                 return Plugin_Stop;
             }
         }
@@ -143,22 +152,22 @@ public void OnClientPutInServer(int client)
 public Action Cmd_MixStop(int client, int args) {
     if (currentState != STATE_NO_MIX) {
         StopMix();
-        CPrintToChatAll("{lightgreen}★ {default}Yetkili ({olive}%N{default}) mix'i durdurdu.", client);
+        CPrintToChatAll("{blue}[{default}Mix{blue}] {default}Yetkili ({olive}%N{default}) mix'i durdurdu.", client);
     } else {
-        CPrintToChat(client, "{lightgreen}★ {default}Şu an yürülükte bir mix yok.");
+        CPrintToChat(client, "{blue}[{default}Mix{blue}] {default}Şu an yürülükte bir mix yok.");
     }
 }
 
 public Action Cmd_MixStart(int client, int args)
 {
     if (currentState != STATE_NO_MIX) {
-        CPrintToChat(client, "{lightgreen}★ {default}Zaten bir mix başlatılmış.");
+        CPrintToChat(client, "{blue}[{default}Mix{blue}] {default}Zaten bir mix başlatılmış.");
         return Plugin_Handled;
     } else if (!isMixAllowed) {
-        CPrintToChat(client, "{lightgreen}★ {default}Mixler sadece Ready-Up sürecinde yapılabilir.");
+        CPrintToChat(client, "{blue}[{default}Mix{blue}] {default}Mixler sadece Ready-Up sürecinde yapılabilir.");
         return Plugin_Handled;
-    } else if (GetClientTeamEx(client) == 1) {
-	CPrintToChat(client, "{lightgreen}★ {default}Izleyiciler mix için oy veremez.");
+    } else if (GetClientTeamEx(client) == 1 && GetUserAdmin(client) == INVALID_ADMIN_ID) {
+	CPrintToChat(client, "{blue}[{default}Mix{blue}] {default}Izleyiciler mix için oy veremez.");
 	return Plugin_Handled;
 	}
 
@@ -167,10 +176,10 @@ public Action Cmd_MixStart(int client, int args)
 
     if (mixConditions == COND_START_MIX || mixConditions == COND_START_MIX_ADMIN) {
         if (mixConditions == COND_START_MIX_ADMIN) {
-            CPrintToChatAll("{lightgreen}★ {default}Yetkili ({olive}%N{default}) tarafından mix başlatıldı.", client);
+            CPrintToChatAll("{blue}[{default}Mix{blue}] {default}Yetkili ({olive}%N{default}) tarafından mix başlatıldı.", client);
         } else {
-            CPrintToChatAll("{lightgreen}★ {green}%N {default}mix için oy verdi.", client);
-            CPrintToChatAll("{lightgreen}★ {default}Oylama ile mix başlatıldı.");
+            CPrintToChatAll("{blue}[{default}Mix{blue}] {green}%N {default}mix için oy verdi.", client);
+            CPrintToChatAll("{blue}[{default}Mix{blue}] {default}Oylama ile mix başlatıldı.");
         }
 
         currentState = STATE_FIRST_CAPT;
@@ -194,10 +203,10 @@ public Action Cmd_MixStart(int client, int args)
         isPickingCaptain = true;
 
     } else if (mixConditions == COND_NEED_MORE_VOTES) {
-        CPrintToChatAll("{lightgreen}★ {green}%N {default}mix başlatmak için oy verdi (başlaması için {olive}%d {default}oy daha gerekiyor)", client, MIN_MIX_START_COUNT - mixCallsCount);
+        CPrintToChatAll("{blue}[{default}Mix{blue}] {green}%N {default}mix başlatmak için oy verdi (başlaması için {olive}%d {default}oy daha gerekiyor)", client, MIN_MIX_START_COUNT - mixCallsCount);
 
     } else if (mixConditions == COND_HAS_ALREADY_VOTED) {
-        CPrintToChat(client, "{lightgreen}★ {default}Sen zaten oyladın, 2 kere oy veremiyon xD");
+        CPrintToChat(client, "{blue}[{default}Mix{blue}] {default}Sen zaten oyladın, 2 kere oy veremiyon xD");
 
     }
 
@@ -312,7 +321,7 @@ public int Menu_MixHandler(Menu menu, MenuAction action, int param1, int param2)
             new L4D2Team:team = GetClientTeamEx(param1);
 
             if (team == L4D2Team_Spectator || (team == L4D2Team_Infected && survivorsPick == 1) || (team == L4D2Team_Survivor && survivorsPick == 0)) {
-                CPrintToChatAll("{lightgreen}★ {default}Takım kaptanı ({olive}%N{default}) yanlış takımda bulundu. {green}Mix iptal edildi", param1);
+                CPrintToChatAll("{blue}[{default}Mix{blue}] {default}Takım kaptanı ({olive}%N{default}) yanlış takımda bulundu. {green}Mix iptal edildi", param1);
                 StopMix();
 
             } else {
@@ -323,13 +332,13 @@ public int Menu_MixHandler(Menu menu, MenuAction action, int param1, int param2)
                         // Do not switch picks 
 
                     } else if (pickCount > 5) {
-                        CPrintToChatAll("{lightgreen}★ {default}Herkes takımlardan memnunsa r verin başlayalım :)");
+                        CPrintToChatAll("{blue}[{default}Mix{blue}] {default}Herkes takımlardan memnunsa r verin başlayalım :)");
                         StopMix();
                     } else {
                         survivorsPick = survivorsPick == 1 ? 0 : 1;
                     } 
                 } else {
-                    CPrintToChatAll("{lightgreen}★ {default}Takıma seçilen oyuncu bulunamadı. {green}Mix iptal edildi", param1);
+                    CPrintToChatAll("{blue}[{default}Mix{blue}] {default}Takıma seçilen oyuncu bulunamadı. {green}Mix iptal edildi", param1);
                     StopMix();
                 }
             }
@@ -357,7 +366,7 @@ public Action Menu_StateHandler(Handle timer, Handle hndl)
                     Menu_DisplayToAllSpecs();
                 }
             } else {
-                CPrintToChatAll("{lightgreen}★ {default}Ilk takım kaptanı seçilemedi. {green}Mix iptal edildi");
+                CPrintToChatAll("{blue}[{default}Mix{blue}] {default}Ilk takım kaptanı seçilemedi. {green}Mix iptal edildi");
                 StopMix();
             }
 
@@ -375,7 +384,7 @@ public Action Menu_StateHandler(Handle timer, Handle hndl)
                 CreateTimer(0.5, Menu_StateHandler); 
 
             } else {
-                CPrintToChatAll("{lightgreen}★ {default}Ikinci takım kaptanı seçilemedi. {green}Mix iptal edildi");
+                CPrintToChatAll("{blue}[{default}Mix{blue}] {default}Ikinci takım kaptanı seçilemedi. {green}Mix iptal edildi");
                 StopMix();
             }
 
@@ -414,12 +423,12 @@ public Action Menu_TeamPickHandler(Handle timer)
                 if (GetSpectatorsCount() > 0) {
                     mixMenu.Display(captain, 1); 
                 } else {
-                    CPrintToChatAll("{lightgreen}★ {default}Seçilecek oyuncu bulunamadı. {green}Mix iptal edildi");
+                    CPrintToChatAll("{blue}[{default}Mix{blue}] {default}Seçilecek oyuncu bulunamadı. {green}Mix iptal edildi");
                     StopMix();
                     return Plugin_Stop;
                 }
             } else {
-                CPrintToChatAll("{lightgreen}★ {default}Takım kaptanı bulunamadı. {green}Mix iptal edildi");
+                CPrintToChatAll("{blue}[{default}Mix{blue}] {default}Takım kaptanı bulunamadı. {green}Mix iptal edildi");
                 StopMix();
                 return Plugin_Stop;
             }
@@ -450,18 +459,18 @@ public bool SwapPlayerToTeam(const char[] authId, L4D2Team:team, numVotes)
 
         switch(currentState) {
             case STATE_FIRST_CAPT: {
-                CPrintToChatAll("{lightgreen}★ {green}%d {default}oy ile ilk takım kaptanı {olive}%N {default}seçildi.", numVotes, client);
+                CPrintToChatAll("{blue}[{default}Mix{blue}] {green}%d {default}oy ile ilk takım kaptanı {olive}%N {default}seçildi.", numVotes, client);
             }
             
             case STATE_SECOND_CAPT: {
-                CPrintToChatAll("{lightgreen}★ {green}%d {default}oy ile ikinci takım kaptanı {olive}%N {default}seçildi.", numVotes, client);
+                CPrintToChatAll("{blue}[{default}Mix{blue}] {green}%d {default}oy ile ikinci takım kaptanı {olive}%N {default}seçildi.", numVotes, client);
             }
 
             case STATE_PICK_TEAMS: {
                 if (survivorsPick == 1) {
-                    CPrintToChatAll("{lightgreen}★ {default}Oyuncu {olive}%N {default}sağ kalanlar tarafına seçildi.", client)
+                    CPrintToChatAll("{blue}[{default}Mix{blue}] {default}Oyuncu {olive}%N {default}sağ kalanlar tarafına seçildi.", client)
                 } else {
-                    CPrintToChatAll("{lightgreen}★ {default}Oyuncu {olive}%N {default}enfekteler tarafına seçildi.", client)
+                    CPrintToChatAll("{blue}[{default}Mix{blue}] {default}Oyuncu {olive}%N {default}enfekteler tarafına seçildi.", client)
                 }
             }
         }
@@ -474,7 +483,7 @@ public void OnClientDisconnect(client)
 {
     if (currentState != STATE_NO_MIX && IsPlayerCaptain(client))
     {
-        CPrintToChatAll("{lightgreen}★ {default}Takım kaptanı ({olive}%N{default}) oyundan ayrıldı. {green}Mix iptal edildi", client);
+        CPrintToChatAll("{blue}[{default}Mix{blue}] {default}Takım kaptanı ({olive}%N{default}) oyundan ayrıldı. {green}Mix iptal edildi", client);
         StopMix();
     }
 }
