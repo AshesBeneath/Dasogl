@@ -14,7 +14,7 @@ public Plugin myinfo =
 {
     name = "Standalone Round End Alltalk",
     author = "AshesBeneath",
-    description = "Enables sv_alltalk for 10 game ticks on round end",
+    description = "Automatically enables sv_alltalk during round ends (in L4D(2) Versus mode case during scores are being displayed.)",
     version = "1.2.1",
     url = "https://github.com/AshesBeneath/Dasogl"
 };

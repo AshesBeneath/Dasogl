@@ -45,7 +45,7 @@ public Plugin myinfo =
     name = "L4D2 Mix Manager [TR]",
     author = "Luckylock, AshesBeneath",
     description = "Provides ability to pick captains and teams through menus",
-    version = "3.5",
+    version = "3.6",
     url = "https://github.com/AshesBeneath/Dasogl"
 };
 
@@ -178,8 +178,8 @@ public Action Cmd_MixStart(int client, int args)
         if (mixConditions == COND_START_MIX_ADMIN) {
             CPrintToChatAll("{blue}[{default}Mix{blue}] {default}Yetkili ({olive}%N{default}) tarafından mix başlatıldı.", client);
         } else {
-            CPrintToChatAll("{blue}[{default}Mix{blue}] {green}%N {default}mix için oy verdi.", client);
-            CPrintToChatAll("{blue}[{default}Mix{blue}] {default}Oylama ile mix başlatıldı.");
+            CPrintToChatAll("{blue}[{default}Mix{blue}] {default}Mix için gereken son oyu {green}%N {default}verdi.", client);
+            CPrintToChatAll("{blue}[{default}Mix{blue}] {default}Oylama birliği ile mix başlatıldı.");
         }
 
         currentState = STATE_FIRST_CAPT;
@@ -203,7 +203,7 @@ public Action Cmd_MixStart(int client, int args)
         isPickingCaptain = true;
 
     } else if (mixConditions == COND_NEED_MORE_VOTES) {
-        CPrintToChatAll("{blue}[{default}Mix{blue}] {green}%N {default}mix başlatmak için oy verdi (başlaması için {olive}%d {default}oy daha gerekiyor)", client, MIN_MIX_START_COUNT - mixCallsCount);
+        CPrintToChatAll("{blue}[{default}Mix{blue}] {green}%N {default}oyladı (Oylar: {olive}%d{default}/{default}%d | Oylamak için {green}!mix {default})", client, mixCallsCount, MIN_MIX_START_COUNT);
 
     } else if (mixConditions == COND_HAS_ALREADY_VOTED) {
         CPrintToChat(client, "{blue}[{default}Mix{blue}] {default}Sen zaten oyladın, 2 kere oy veremiyon xD");
@@ -576,6 +576,7 @@ public bool IsHuman(client)
     return IsClientInGame(client) && !IsFakeClient(client);
 }
 
+//credits goes to https://forum.sourceturk.net/d/102-cvar-degisikligi-sohbet-mesajini-gizleme-kodu
 SetCvar(char cvarName[64], value)
 {
 	Handle IntCvar;
