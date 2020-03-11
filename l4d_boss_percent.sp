@@ -180,11 +180,11 @@ public Action:AddReadyFooter(Handle:timer)
 	{
 		decl String:readyString[65];
 		if (iWitchPercent && iTankPercent)
-			Format(readyString, sizeof(readyString), "Tank: %d%%   Witch: %d%%", iTankPercent, iWitchPercent);
+			Format(readyString, sizeof(readyString), "➜ Tank: %d%%   ➜ Witch: %d%%", iTankPercent, iWitchPercent);
 		else if (iTankPercent)
-			Format(readyString, sizeof(readyString), "Tank: %d%%", iTankPercent);
+			Format(readyString, sizeof(readyString), "➜ Tank: %d%%", iTankPercent);
 		else if (iWitchPercent)
-			Format(readyString, sizeof(readyString), "Witch: %d%%", iWitchPercent);
+			Format(readyString, sizeof(readyString), "➜ Witch: %d%%", iWitchPercent);
 		else
 			Format(readyString, sizeof(readyString), "");
 		AddStringToReadyFooter(readyString);

@@ -86,7 +86,7 @@ public void StartMix()
 		KickClient(c, "Mix yapiliyor. Slotlar acilince geri girersin.");
 	}
     }
-    ServerCommand("sm_cvar sv_maxplayers 8");
+    SetCvar("sv_maxplayers", 8);
 }
 
 public void StopMix()
@@ -99,7 +99,7 @@ public void StopMix()
     if (isPickingCaptain && captainVoteTimer != INVALID_HANDLE) {
         KillTimer(captainVoteTimer);
     }
-    ServerCommand("sm_cvar sv_maxplayers 30");
+    SetCvar("sv_maxplayers", 30);
 }
 
 public void FakeClientCommandAll(char[] command)
@@ -574,4 +574,19 @@ stock FindSurvivorBot()
 public bool IsHuman(client)
 {
     return IsClientInGame(client) && !IsFakeClient(client);
+}
+
+SetCvar(char cvarName[64], value)
+{
+	Handle IntCvar;
+	IntCvar = FindConVar(cvarName);
+	if (IntCvar)
+	{
+		int flags = GetConVarFlags(IntCvar);
+		flags &= -257;
+		SetConVarFlags(IntCvar, flags);
+		SetConVarInt(IntCvar, value, false, false);
+		flags |= 256;
+		SetConVarFlags(IntCvar, flags);
+	}
 }

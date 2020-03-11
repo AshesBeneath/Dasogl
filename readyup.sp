@@ -24,6 +24,7 @@
 #include <sdktools>
 #include <left4downtown>
 #include <l4d2_direct>
+#include <l4d2util_rounds>
 #include <builtinvotes>
 #include <colors>
 
@@ -89,7 +90,9 @@ new String:liveSound[256];
 new bool:blockSecretSpam[MAXPLAYERS + 1];
 new bool:bHostName;
 
+new String:ozluSozler[128];
 new bootTime;
+new tg;
 
 new String:countdownSound[MAX_SOUNDS][]=
 {
@@ -691,6 +694,7 @@ public Action:MenuCmd_Timer(Handle:timer)
 {
 	if (inReadyUp)
 	{
+		tg++;
 		return Plugin_Continue;
 	}
 	return Plugin_Stop;
@@ -727,7 +731,9 @@ UpdatePanel()
 		CloseHandle(menuPanel);
 		menuPanel = INVALID_HANDLE;
 	}
-
+	
+	SwitchQuotes();
+	
 	new String:survivorBuffer[800] = "";
 	new String:infectedBuffer[800] = "";
 	new String:casterBuffer[500];
@@ -759,6 +765,7 @@ UpdatePanel()
 	new String:ServerName[64];
 	new String:cfgName[32];
 	new String:sMap[64];
+	new String:roundinfo[32];
 	
 	GetCurrentMap(sMap, sizeof(sMap));
         HangiHaritaLenMq(sMap, sMap, sizeof(sMap));
@@ -779,9 +786,13 @@ UpdatePanel()
 	
 	GetConVarString(l4d_ready_cfg_name, cfgName, 32);
 	//DrawPanelText(menuPanel, tarihsaat); //Tarih & Saat
-	Format(ServerBuffer, 128, "Sunucu: %s [%d/%d]\nConfig: %s\nUptime: %s", ServerName, GetSeriousClientCount(), GetConVarInt(FindConVar("sv_maxplayers")), cfgName, stringTimer);
+	Format(ServerBuffer, 128, "➜ Sunucu: %s [%d/%d]\n➜ Config: %s\n➜ Uptime: %s", ServerName, GetSeriousClientCount(), GetConVarInt(FindConVar("sv_maxplayers")), cfgName, stringTimer);
+	Format(roundinfo, sizeof(roundinfo), "➜ Round %s/2", (InSecondHalfOfRound() ? "2" : "1"));
 	DrawPanelText(menuPanel, ServerBuffer);
 	DrawPanelText(menuPanel, sMap);
+	DrawPanelText(menuPanel, roundinfo);
+	DrawPanelText(menuPanel, " ");
+	DrawPanelText(menuPanel, ozluSozler);
 	DrawPanelText(menuPanel, " ");
 
 	decl String:nameBuf[MAX_NAME_LENGTH*2];
@@ -1264,4 +1275,55 @@ bool HangiHaritaLenMq(const char[] mapId, char[] mapName, int iLength)
     kv.GetString(NULL_STRING, mapName, iLength);
     delete kv;
     return true;
+}
+
+SwitchQuotes()
+{
+	if (tg > 9)
+	{
+		tg = 1;
+	}
+	switch (tg)
+	{
+		case 1:
+		{
+			Format(ozluSozler, sizeof(ozluSozler), "\"neyse knk sir ac .d\"");
+		}
+		case 2:
+		{
+			Format(ozluSozler, sizeof(ozluSozler), "\"yav ne alaka amq\"");
+		}
+		case 3:
+		{
+			Format(ozluSozler, sizeof(ozluSozler), "\"oha bal abi cus yuh\"");
+		}
+		case 4:
+		{
+			Format(ozluSozler, sizeof(ozluSozler), "\"tmm analdik aq\"");
+		}
+		case 5:
+		{
+			Format(ozluSozler, sizeof(ozluSozler), "\"atak ins\"");
+		}
+		case 6:
+		{
+			Format(ozluSozler, sizeof(ozluSozler), "\"settir len\"");
+		}
+		case 7:
+		{
+			Format(ozluSozler, sizeof(ozluSozler), "\"avci tipini si...\"");
+		}
+		case 8:
+		{
+			Format(ozluSozler, sizeof(ozluSozler), "\"abla bi imza be\"");
+		}
+		case 9:
+		{
+			Format(ozluSozler, sizeof(ozluSozler), "\"ahahdasdus ulan vo das DAS LAN DAAAS\"");
+		}
+		default:
+		{
+		}
+	}
+	return 0;
 }
