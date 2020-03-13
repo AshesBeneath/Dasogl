@@ -43,7 +43,7 @@ public Action:CurrentCmd(client, args)
     }
     new Float:proximity = RoundToNearestN(GetProximity() * 100.0, precision);
     decl String:msg[128];
-    Format(msg, sizeof(msg), "{blue}[{default}Boss{blue}] {olive}Şu anda: {green}%%.%df%%%%", precision);
+    Format(msg, sizeof(msg), "{blue}[{default}Boss{blue}] {olive}Surv: {green}%%.%df%%%%", precision);
     CPrintToChat(client, msg, proximity);
 
 #if DEBUG

@@ -45,6 +45,7 @@ public Event_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	SetCvar("sv_alltalk", 0);
 	CPrintToChatAll("{olive}Toplu Konuşma {green}Kapalı");
+	isPrintedOnce = false;
 }
 
 //credits goes to https://forum.sourceturk.net/d/102-cvar-degisikligi-sohbet-mesajini-gizleme-kodu

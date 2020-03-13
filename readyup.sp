@@ -41,7 +41,7 @@ public Plugin:myinfo =
 	name = "L4D2 Ready-Up [DASogl Edition]",
 	author = "CanadaRox, Sir, devilesk, AshesBeneath",
 	description = "New and improved ready-up plugin.",
-	version = "9.2.6",
+	version = "10.1",
 	url = "https://github.com/AshesBeneath/Dasogl"
 };
 
@@ -151,8 +151,10 @@ public OnPluginStart()
 	RegConsoleCmd("sm_notcasting", NotCasting_Cmd, "Deregister yourself as a caster or allow admins to deregister other players");
 	RegConsoleCmd("sm_uncast", NotCasting_Cmd, "Deregister yourself as a caster or allow admins to deregister other players");
 	RegConsoleCmd("sm_ready", Ready_Cmd, "Mark yourself as ready for the round to go live");
+	RegConsoleCmd("sm_r", Ready_Cmd, "Mark yourself as ready for the round to go live");
 	RegConsoleCmd("sm_toggleready", ToggleReady_Cmd, "Toggle your ready status");
 	RegConsoleCmd("sm_unready", Unready_Cmd, "Mark yourself as not ready if you have set yourself as ready");
+	RegConsoleCmd("sm_nr", Unready_Cmd, "Mark yourself as not ready if you have set yourself as ready");
 	RegConsoleCmd("sm_return", Return_Cmd, "Return to a valid saferoom spawn if you get stuck during an unfrozen ready-up period");
 	RegConsoleCmd("sm_cast", Cast_Cmd, "Registers the calling player as a caster so the round will not go live unless they are ready");
 	RegConsoleCmd("sm_kickspecs", KickSpecs_Cmd, "Let's vote to kick those Spectators!", 0);
@@ -1287,39 +1289,39 @@ SwitchQuotes()
 	{
 		case 1:
 		{
-			Format(ozluSozler, sizeof(ozluSozler), "\"neyse knk sir ac .d\"");
+			Format(ozluSozler, sizeof(ozluSozler), "➜ !r / !nr / !toggleready\n➜ Hazir misin len?");
 		}
 		case 2:
 		{
-			Format(ozluSozler, sizeof(ozluSozler), "\"yav ne alaka amq\"");
+			Format(ozluSozler, sizeof(ozluSozler), "➜ !mix\n➜ Kaptan secmeli takim belirleme");
 		}
 		case 3:
 		{
-			Format(ozluSozler, sizeof(ozluSozler), "\"oha bal abi cus yuh\"");
+			Format(ozluSozler, sizeof(ozluSozler), "➜ !voteboss <tank> <cadi>\n➜ Yuzde degisimi oylamasi (0 = No spawn)");
 		}
 		case 4:
 		{
-			Format(ozluSozler, sizeof(ozluSozler), "\"tmm analdik aq\"");
+			Format(ozluSozler, sizeof(ozluSozler), "➜ !lerps / !rates\n➜ Oynayanlarin lerp/rate ayarlari");
 		}
 		case 5:
 		{
-			Format(ozluSozler, sizeof(ozluSozler), "\"atak ins\"");
+			Format(ozluSozler, sizeof(ozluSozler), "➜ !mapinfo\n➜ Mevcut harita icin max puan/bonus bilgileri");
 		}
 		case 6:
 		{
-			Format(ozluSozler, sizeof(ozluSozler), "\"settir len\"");
+			Format(ozluSozler, sizeof(ozluSozler), "➜ !secondary\n➜ Yerden aldigin melee'ye otomatik switchleme ayari");
 		}
 		case 7:
 		{
-			Format(ozluSozler, sizeof(ozluSozler), "\"avci tipini si...\"");
+			Format(ozluSozler, sizeof(ozluSozler), "➜ !weapon_attributes <silah kodu>\n➜ smg_silenced, smg, shotgun_chrome, pumpshotgun");
 		}
 		case 8:
 		{
-			Format(ozluSozler, sizeof(ozluSozler), "\"abla bi imza be\"");
+			Format(ozluSozler, sizeof(ozluSozler), "➜ !mvp / !skill / !ff / !acc\n➜ Ilki haric hepsi konsola tablo olarak duser");
 		}
 		case 9:
 		{
-			Format(ozluSozler, sizeof(ozluSozler), "\"ahahdasdus ulan vo das DAS LAN DAAAS\"");
+			Format(ozluSozler, sizeof(ozluSozler), "➜ !kickspecs\n➜ Izleyicileri atmak icin oylama baslatir");
 		}
 		default:
 		{
