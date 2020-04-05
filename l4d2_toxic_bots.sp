@@ -68,7 +68,7 @@ public AdamIncap(Handle:event, const String:name[], bool:dontBroadcast)
 						}
 						case 4:
 						{
-							Format(botchat,sizeof(botchat),"kickleyin şunu da yükünüz hafiflesin");
+							Format(botchat,sizeof(botchat),"atak bunu bu ne ya hep düşüyo");
 						}
 						case 5:
 						{
@@ -118,7 +118,7 @@ public SafeKapiKapali(Handle:event, const String:name[], bool:dontBroadcast)
 					}
 					case 2:
 					{
-						Format(botchat,sizeof(botchat),"noob enfekteler");
+						Format(botchat,sizeof(botchat),"zaaaa");
 					}
 					case 3:
 					{
@@ -126,7 +126,7 @@ public SafeKapiKapali(Handle:event, const String:name[], bool:dontBroadcast)
 					}
 					case 4:
 					{
-						Format(botchat,sizeof(botchat),"izi pizi biçızz");
+						Format(botchat,sizeof(botchat),"wit REAAAAAAAAAKQISH EZZ");
 					}
 					case 5:
 					{

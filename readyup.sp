@@ -38,10 +38,10 @@
 
 public Plugin:myinfo =
 {
-	name = "L4D2 Ready-Up [DASogl Edition]",
+	name = "L4D2 Ready-Up [TR]",
 	author = "CanadaRox, Sir, devilesk, AshesBeneath",
 	description = "New and improved ready-up plugin.",
-	version = "10.1",
+	version = "10.3",
 	url = "https://github.com/AshesBeneath/Dasogl"
 };
 
@@ -119,7 +119,7 @@ public OnPluginStart()
 	CreateConVar("l4d_ready_enabled", "1", "This cvar doesn't do anything, but if it is 0 the logger wont log this game.", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	l4d_ready_cfg_name = CreateConVar("l4d_ready_cfg_name", "", "Configname to display on the ready-up panel", FCVAR_PLUGIN|FCVAR_PRINTABLEONLY);
 	l4d_ready_disable_spawns = CreateConVar("l4d_ready_disable_spawns", "0", "Prevent SI from having spawns during ready-up", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-	l4d_ready_survivor_freeze = CreateConVar("l4d_ready_survivor_freeze", "1", "Freeze the survivors during ready-up.  When unfrozen they are unable to leave the saferoom but can move freely inside", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	l4d_ready_survivor_freeze = CreateConVar("l4d_ready_survivor_freeze", "0", "Freeze the survivors during ready-up.  When unfrozen they are unable to leave the saferoom but can move freely inside", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	l4d_ready_max_players = CreateConVar("l4d_ready_max_players", "12", "Maximum number of players to show on the ready-up panel.", FCVAR_PLUGIN, true, 0.0, true, MAXPLAYERS+1.0);
 	l4d_ready_delay = CreateConVar("l4d_ready_delay", "3", "Number of seconds to count down before the round goes live.", FCVAR_PLUGIN, true, 0.0);
 	l4d_ready_enable_sound = CreateConVar("l4d_ready_enable_sound", "1", "Enable sound during countdown & on live");
@@ -1289,39 +1289,39 @@ SwitchQuotes()
 	{
 		case 1:
 		{
-			Format(ozluSozler, sizeof(ozluSozler), "➜ !r / !nr / !toggleready\n➜ Hazir misin len?");
+			Format(ozluSozler, sizeof(ozluSozler), "➜ !r / !nr / !toggleready");
 		}
 		case 2:
 		{
-			Format(ozluSozler, sizeof(ozluSozler), "➜ !mix\n➜ Kaptan secmeli takim belirleme");
+			Format(ozluSozler, sizeof(ozluSozler), "➜ !mix");
 		}
 		case 3:
 		{
-			Format(ozluSozler, sizeof(ozluSozler), "➜ !voteboss <tank> <cadi>\n➜ Yuzde degisimi oylamasi (0 = No spawn)");
+			Format(ozluSozler, sizeof(ozluSozler), "➜ !boss / !voteboss <tank> <cadi>");
 		}
 		case 4:
 		{
-			Format(ozluSozler, sizeof(ozluSozler), "➜ !lerps / !rates\n➜ Oynayanlarin lerp/rate ayarlari");
+			Format(ozluSozler, sizeof(ozluSozler), "➜ !lerps / !rates");
 		}
 		case 5:
 		{
-			Format(ozluSozler, sizeof(ozluSozler), "➜ !mapinfo\n➜ Mevcut harita icin max puan/bonus bilgileri");
+			Format(ozluSozler, sizeof(ozluSozler), "➜ !mapinfo / !bonus / !health");
 		}
 		case 6:
 		{
-			Format(ozluSozler, sizeof(ozluSozler), "➜ !secondary\n➜ Yerden aldigin melee'ye otomatik switchleme ayari");
+			Format(ozluSozler, sizeof(ozluSozler), "➜ !secondary");
 		}
 		case 7:
 		{
-			Format(ozluSozler, sizeof(ozluSozler), "➜ !weapon_attributes <silah kodu>\n➜ smg_silenced, smg, shotgun_chrome, pumpshotgun");
+			Format(ozluSozler, sizeof(ozluSozler), "➜ !kickspecs");
 		}
 		case 8:
 		{
-			Format(ozluSozler, sizeof(ozluSozler), "➜ !mvp / !skill / !ff / !acc\n➜ Ilki haric hepsi konsola tablo olarak duser");
+			Format(ozluSozler, sizeof(ozluSozler), "➜ !mvp / !skill / !ff / !acc");
 		}
 		case 9:
 		{
-			Format(ozluSozler, sizeof(ozluSozler), "➜ !kickspecs\n➜ Izleyicileri atmak icin oylama baslatir");
+			Format(ozluSozler, sizeof(ozluSozler), "➜ !troll");
 		}
 		default:
 		{

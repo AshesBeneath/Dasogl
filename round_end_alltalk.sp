@@ -41,6 +41,7 @@ public Event_RoundEnd(Handle:event, const String:name[], bool:dontBroadcast)
 	}
 }
 
+//round_start event is fired at last so we're cool
 public Event_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	SetCvar("sv_alltalk", 0);

@@ -34,3 +34,4 @@ forward OnRoundEnd();
 stock bool:InSecondHalfOfRound() {
     return bool:GameRules_GetProp("m_bInSecondHalfOfRound");
 }
+

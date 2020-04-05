@@ -20,7 +20,6 @@ public bool OnClientConnect(int client, char[] rejectmsg, int maxlen)
 	if (!IsFakeClient(client))
 	{
 		g_flTimeConnected[client] = GetEngineTime();
-		CPrintToChatAll("{olive}%N {default}yükleniyor...", client);
 	}
 
 	return true;
@@ -31,7 +30,7 @@ public void OnClientPostAdminCheck(int client)
 	if (!IsFakeClient(client))
 	{
 		float flFinalTime = GetEngineTime() - g_flTimeConnected[client];
-		CPrintToChatAll("{olive}%N {default}sunucuya {green}%.2f {default}saniyede bağlandı.", client, flFinalTime);
+		CPrintToChatAll("{olive}%N {default}sunucuya bağlandı ({green}%.2f {default}sn)", client, flFinalTime);
 	}
 }
 
