@@ -58,8 +58,9 @@
 #include <sdkhooks>
 #include <sdktools>
 #include <l4d2_direct>
+#include <smlib>
 
-#define PLUGIN_VERSION "0.9.19"
+#define PLUGIN_VERSION "0.9.2"
 
 #define IS_VALID_CLIENT(%1)     (%1 > 0 && %1 <= MaxClients)
 #define IS_SURVIVOR(%1)         (GetClientTeam(%1) == 2)
@@ -147,7 +148,7 @@
 #define REP_BHOPSTREAK          (1 << 18)       // 262144
 #define REP_CARALARM            (1 << 19)       // 524288
 
-#define REP_DEFAULT             "581685"        // (REP_SKEET | REP_LEVEL | REP_CROWN | REP_DRAWCROWN | REP_HUNTERDP | REP_JOCKEYDP | REP_DEATHCHARGE | REP_CARALARM)
+#define REP_DEFAULT             "781309"        // (REP_SKEET | REP_LEVEL | REP_CROWN | REP_DRAWCROWN | REP_HUNTERDP | REP_JOCKEYDP | REP_DEATHCHARGE | REP_CARALARM)
                                                 //  1 4 16 32 8192 16384 32768 65536 (122933 with ASSIST, 57397 without); 131072 for instaclears + 524288 for car alarm
 
 
@@ -504,26 +505,26 @@ public OnPluginStart()
     
     
     // version cvar
-    CreateConVar( "sm_skill_detect_version", PLUGIN_VERSION, "Skill detect plugin version.", FCVAR_PLUGIN|FCVAR_NOTIFY|FCVAR_REPLICATED|FCVAR_DONTRECORD );
+    CreateConVar( "sm_skill_detect_version", PLUGIN_VERSION, "Skill detect plugin version.", FCVAR_NOTIFY|FCVAR_REPLICATED|FCVAR_DONTRECORD );
     
     // cvars: config
     
-    g_hCvarReport = CreateConVar(           "sm_skill_report_enable" ,      "1", "Whether to report in chat (see sm_skill_report_flags).", FCVAR_PLUGIN, true, 0.0, true, 1.0 );
-    g_hCvarReportFlags = CreateConVar(      "sm_skill_report_flags" ,       REP_DEFAULT, "What to report skeets in chat (bitflags: 1,2:skeets/hurt; 4,8:level/chip; 16,32:crown/draw; 64,128:cut/selfclear, ... ).", FCVAR_PLUGIN, true, 0.0 );
+    g_hCvarReport = CreateConVar(           "sm_skill_report_enable" ,      "1", "Whether to report in chat (see sm_skill_report_flags).", FCVAR_NONE, true, 0.0, true, 1.0 );
+    g_hCvarReportFlags = CreateConVar(      "sm_skill_report_flags" ,       REP_DEFAULT, "What to report skeets in chat (bitflags: 1,2:skeets/hurt; 4,8:level/chip; 16,32:crown/draw; 64,128:cut/selfclear, ... ).", FCVAR_NONE, true, 0.0 );
     
-    g_hCvarAllowMelee = CreateConVar(       "sm_skill_skeet_allowmelee",    "1", "Whether to count/forward melee skeets.", FCVAR_PLUGIN, true, 0.0, true, 1.0 );
-    g_hCvarAllowSniper = CreateConVar(      "sm_skill_skeet_allowsniper",   "1", "Whether to count/forward sniper/magnum headshots as skeets.", FCVAR_PLUGIN, true, 0.0, true, 1.0 );
-    g_hCvarAllowGLSkeet = CreateConVar(     "sm_skill_skeet_allowgl",       "1", "Whether to count/forward direct GL hits as skeets.", FCVAR_PLUGIN, true, 0.0, true, 1.0 );
-    g_hCvarDrawCrownThresh = CreateConVar(  "sm_skill_drawcrown_damage",  "500", "How much damage a survivor must at least do in the final shot for it to count as a drawcrown.", FCVAR_PLUGIN, true, 0.0, false );
-    g_hCvarSelfClearThresh = CreateConVar(  "sm_skill_selfclear_damage",  "200", "How much damage a survivor must at least do to a smoker for him to count as self-clearing.", FCVAR_PLUGIN, true, 0.0, false );
-    g_hCvarHunterDPThresh = CreateConVar(   "sm_skill_hunterdp_height",   "400", "Minimum height of hunter pounce for it to count as a DP.", FCVAR_PLUGIN, true, 0.0, false );
-    g_hCvarJockeyDPThresh = CreateConVar(   "sm_skill_jockeydp_height",   "300", "How much height distance a jockey must make for his 'DP' to count as a reportable highpounce.", FCVAR_PLUGIN, true, 0.0, false );
-    g_hCvarHideFakeDamage = CreateConVar(   "sm_skill_hidefakedamage",      "0", "If set, any damage done that exceeds the health of a victim is hidden in reports.", FCVAR_PLUGIN, true, 0.0, true, 1.0 );
-    g_hCvarDeathChargeHeight = CreateConVar("sm_skill_deathcharge_height","400", "How much height distance a charger must take its victim for a deathcharge to be reported.", FCVAR_PLUGIN, true, 0.0, false );
-    g_hCvarInstaTime = CreateConVar(        "sm_skill_instaclear_time",     "0.75", "A clear within this time (in seconds) counts as an insta-clear.", FCVAR_PLUGIN, true, 0.0, false );
-    g_hCvarBHopMinStreak = CreateConVar(    "sm_skill_bhopstreak",          "3", "The lowest bunnyhop streak that will be reported.", FCVAR_PLUGIN, true, 0.0, false );
-    g_hCvarBHopMinInitSpeed = CreateConVar( "sm_skill_bhopinitspeed",     "150", "The minimal speed of the first jump of a bunnyhopstreak (0 to allow 'hops' from standstill).", FCVAR_PLUGIN, true, 0.0, false );
-    g_hCvarBHopContSpeed = CreateConVar(    "sm_skill_bhopkeepspeed",     "300", "The minimal speed at which hops are considered succesful even if not speed increase is made.", FCVAR_PLUGIN, true, 0.0, false );
+    g_hCvarAllowMelee = CreateConVar(       "sm_skill_skeet_allowmelee",    "1", "Whether to count/forward melee skeets.", FCVAR_NONE, true, 0.0, true, 1.0 );
+    g_hCvarAllowSniper = CreateConVar(      "sm_skill_skeet_allowsniper",   "1", "Whether to count/forward sniper/magnum headshots as skeets.", FCVAR_NONE, true, 0.0, true, 1.0 );
+    g_hCvarAllowGLSkeet = CreateConVar(     "sm_skill_skeet_allowgl",       "1", "Whether to count/forward direct GL hits as skeets.", FCVAR_NONE, true, 0.0, true, 1.0 );
+    g_hCvarDrawCrownThresh = CreateConVar(  "sm_skill_drawcrown_damage",  "500", "How much damage a survivor must at least do in the final shot for it to count as a drawcrown.", FCVAR_NONE, true, 0.0, false );
+    g_hCvarSelfClearThresh = CreateConVar(  "sm_skill_selfclear_damage",  "200", "How much damage a survivor must at least do to a smoker for him to count as self-clearing.", FCVAR_NONE, true, 0.0, false );
+    g_hCvarHunterDPThresh = CreateConVar(   "sm_skill_hunterdp_height",   "400", "Minimum height of hunter pounce for it to count as a DP.", FCVAR_NONE, true, 0.0, false );
+    g_hCvarJockeyDPThresh = CreateConVar(   "sm_skill_jockeydp_height",   "300", "How much height distance a jockey must make for his 'DP' to count as a reportable highpounce.", FCVAR_NONE, true, 0.0, false );
+    g_hCvarHideFakeDamage = CreateConVar(   "sm_skill_hidefakedamage",      "0", "If set, any damage done that exceeds the health of a victim is hidden in reports.", FCVAR_NONE, true, 0.0, true, 1.0 );
+    g_hCvarDeathChargeHeight = CreateConVar("sm_skill_deathcharge_height","400", "How much height distance a charger must take its victim for a deathcharge to be reported.", FCVAR_NONE, true, 0.0, false );
+    g_hCvarInstaTime = CreateConVar(        "sm_skill_instaclear_time",     "0.75", "A clear within this time (in seconds) counts as an insta-clear.", FCVAR_NONE, true, 0.0, false );
+    g_hCvarBHopMinStreak = CreateConVar(    "sm_skill_bhopstreak",          "3", "The lowest bunnyhop streak that will be reported.", FCVAR_NONE, true, 0.0, false );
+    g_hCvarBHopMinInitSpeed = CreateConVar( "sm_skill_bhopinitspeed",     "150", "The minimal speed of the first jump of a bunnyhopstreak (0 to allow 'hops' from standstill).", FCVAR_NONE, true, 0.0, false );
+    g_hCvarBHopContSpeed = CreateConVar(    "sm_skill_bhopkeepspeed",     "300", "The minimal speed at which hops are considered succesful even if not speed increase is made.", FCVAR_NONE, true, 0.0, false );
     
     // cvars: built in
     g_hCvarPounceInterrupt = FindConVar("z_pounce_damage_interrupt");
@@ -536,9 +537,9 @@ public OnPluginStart()
     g_hCvarMaxPounceDistance = FindConVar("z_pounce_damage_range_max");
     g_hCvarMinPounceDistance = FindConVar("z_pounce_damage_range_min");
     g_hCvarMaxPounceDamage = FindConVar("z_hunter_max_pounce_bonus_damage");
-    if ( g_hCvarMaxPounceDistance == INVALID_HANDLE ) { g_hCvarMaxPounceDistance = CreateConVar( "z_pounce_damage_range_max",  "1000.0", "Not available on this server, added by l4d2_skill_detect.", FCVAR_PLUGIN, true, 0.0, false ); }
-    if ( g_hCvarMinPounceDistance == INVALID_HANDLE ) { g_hCvarMinPounceDistance = CreateConVar( "z_pounce_damage_range_min",  "300.0", "Not available on this server, added by l4d2_skill_detect.", FCVAR_PLUGIN, true, 0.0, false ); }
-    if ( g_hCvarMaxPounceDamage == INVALID_HANDLE ) { g_hCvarMaxPounceDamage = CreateConVar( "z_hunter_max_pounce_bonus_damage",  "49", "Not available on this server, added by l4d2_skill_detect.", FCVAR_PLUGIN, true, 0.0, false ); }
+    if ( g_hCvarMaxPounceDistance == INVALID_HANDLE ) { g_hCvarMaxPounceDistance = CreateConVar( "z_pounce_damage_range_max",  "1000.0", "Not available on this server, added by l4d2_skill_detect.", FCVAR_NONE, true, 0.0, false ); }
+    if ( g_hCvarMinPounceDistance == INVALID_HANDLE ) { g_hCvarMinPounceDistance = CreateConVar( "z_pounce_damage_range_min",  "300.0", "Not available on this server, added by l4d2_skill_detect.", FCVAR_NONE, true, 0.0, false ); }
+    if ( g_hCvarMaxPounceDamage == INVALID_HANDLE ) { g_hCvarMaxPounceDamage = CreateConVar( "z_hunter_max_pounce_bonus_damage",  "49", "Not available on this server, added by l4d2_skill_detect.", FCVAR_NONE, true, 0.0, false ); }
     
     
     // tries
@@ -2437,11 +2438,11 @@ stock HandlePop( attacker, victim, shoveCount, Float:timeAlive )
     {
         if ( IS_VALID_INGAME(attacker) && IS_VALID_INGAME(victim) && !IsFakeClient(victim) )
         {
-            PrintToChatAll( "\x04%N\x01 popped \x05%N\x01.", attacker, victim );
+            Client_PrintToChatAll(false, "{O}★ {B}%N {N}popped {R}%N", attacker, victim );
         }
         else if ( IS_VALID_INGAME(attacker) )
         {
-            PrintToChatAll( "\x04%N\x01 popped a boomer.", attacker );
+            Client_PrintToChatAll(false, "{O}★ {B}%N {N}popped a boomer", attacker );
         }
     }
     
@@ -2461,14 +2462,14 @@ stock HandleLevel( attacker, victim )
     {
         if ( IS_VALID_INGAME(attacker) && IS_VALID_INGAME(victim) && !IsFakeClient(victim) )
         {
-            PrintToChatAll( "\x04%N\x01 leveled \x05%N\x01.", attacker, victim );
+            Client_PrintToChatAll(false, "{O}★★★ {B}%N {N}leveled {R}%N", attacker, victim );
         }
         else if ( IS_VALID_INGAME(attacker) )
         {
-            PrintToChatAll( "\x04%N\x01 leveled a charger.", attacker );
+            Client_PrintToChatAll(false, "{O}★★★ {B}%N {N}leveled a charger.", attacker );
         }
         else {
-            PrintToChatAll( "A charger was leveled." );
+            Client_PrintToChatAll(false, "{O}★★★ {N}A charger was leveled." );
         }
     }
     
@@ -2486,14 +2487,14 @@ stock HandleLevelHurt( attacker, victim, damage )
     {
         if ( IS_VALID_INGAME(attacker) && IS_VALID_INGAME(victim) && !IsFakeClient(victim) )
         {
-            PrintToChatAll( "\x04%N\x01 chip-leveled \x05%N\x01 (\x03%i\x01 damage).", attacker, victim, damage );
+            Client_PrintToChatAll(false, "{O}★ {B}%N {N}chip-leveled {R}%N {N}({OG}%i {N}damage)", attacker, victim, damage );
         }
         else if ( IS_VALID_INGAME(attacker) )
         {
-            PrintToChatAll( "\x04%N\x01 chip-leveled a charger. (\x03%i\x01 damage)", attacker, damage );
+            Client_PrintToChatAll(false, "{O}★ {B}%N {N}chip-leveled a charger {N}({OG}%i {N}damage)", attacker, damage );
         }
         else {
-            PrintToChatAll( "A charger was chip-leveled (\x03%i\x01 damage).", damage );
+            Client_PrintToChatAll(false, "{O}★ {N}A charger was chip-leveled ({OG}%i {N}damage)", damage );
         }
     }
     
@@ -2513,11 +2514,11 @@ stock HandleDeadstop( attacker, victim )
     {
         if ( IS_VALID_INGAME(attacker) && IS_VALID_INGAME(victim) && !IsFakeClient(victim) )
         {
-            PrintToChatAll( "\x04%N\x01 deadstopped \x05%N\x01.", attacker, victim );
+            Client_PrintToChatAll(false, "{O}★ {B}%N {N}deadstopped {R}%N", attacker, victim );
         }
         else if ( IS_VALID_INGAME(attacker) )
         {
-            PrintToChatAll( "\x04%N\x01 deadstopped a hunter.", attacker );
+            Client_PrintToChatAll(false, "{O}★ {B}%N {N}deadstopped a hunter", attacker );
         }
     }
     
@@ -2533,11 +2534,11 @@ stock HandleShove( attacker, victim, zombieClass )
     {
         if ( IS_VALID_INGAME(attacker) && IS_VALID_INGAME(victim) && !IsFakeClient(victim) )
         {
-            PrintToChatAll( "\x04%N\x01 shoved \x05%N\x01.", attacker, victim );
+            Client_PrintToChatAll(false, "{O}★ {B}%N {N}shoved {R}%N", attacker, victim );
         }
         else if ( IS_VALID_INGAME(attacker) )
         {
-            PrintToChatAll( "\x04%N\x01 shoved an SI.", attacker );
+            Client_PrintToChatAll(false, "{O}★ {B}%N {N}shoved an SI.", attacker );
         }
     }
     
@@ -2558,14 +2559,14 @@ stock HandleSkeet( attacker, victim, bool:bMelee = false, bool:bSniper = false, 
         {
             // team skeet sets to -2
             if ( IS_VALID_INGAME(victim) && !IsFakeClient(victim) ) {
-                PrintToChatAll( "\x05%N\x01 was team-skeeted.", victim );
+                Client_PrintToChatAll(false, "{O}★★ {R}%N {N}was team-skeeted", victim );
             } else {
-                PrintToChatAll( "\x01A hunter was team-skeeted." );
+                Client_PrintToChatAll(false, "{O}★★ {N}A hunter was team-skeeted" );
             }
         }
         else if ( IS_VALID_INGAME(attacker) && IS_VALID_INGAME(victim) && !IsFakeClient(victim) )
         {
-            PrintToChatAll( "\x04%N\x01 %sskeeted \x05%N\x01.",
+            Client_PrintToChatAll(false, "{O}★★★ {B}%N {N}%sskeeted {R}%N",
                     attacker,
                     (bMelee) ? "melee-": ((bSniper) ? "headshot-" : ((bGL) ? "grenade-" : "") ),
                     victim 
@@ -2573,7 +2574,7 @@ stock HandleSkeet( attacker, victim, bool:bMelee = false, bool:bSniper = false, 
         }
         else if ( IS_VALID_INGAME(attacker) )
         {
-            PrintToChatAll( "\x04%N\x01 %sskeeted a hunter.",
+            Client_PrintToChatAll(false, "{O}★★★ {B}%N {N}%sskeeted a hunter",
                     attacker,
                     (bMelee) ? "melee-": ((bSniper) ? "headshot-" : ((bGL) ? "grenade-" : "") )
                 );
@@ -2620,11 +2621,11 @@ stock HandleNonSkeet( attacker, victim, damage, bool:bOverKill = false, bool:bMe
     {
         if ( IS_VALID_INGAME(victim) )
         {
-            PrintToChatAll( "\x05%N\x01 was \x04not\x01 skeeted (\x03%i\x01 damage).%s", victim, damage, (bOverKill) ? "(Would've skeeted if hunter were unchipped!)" : "" );
+            Client_PrintToChatAll(false, "{O}★ {R}%N {N}was not skeeted ({OG}%i {N}damage).%s", victim, damage, (bOverKill) ? "(Would've skeeted if hunter were unchipped!)" : "" );
         }
         else
         {
-            PrintToChatAll( "\x01Hunter was \x04not\x01 skeeted (\x03%i\x01 damage).%s", damage, (bOverKill) ? "(Would've skeeted if hunter were unchipped!)" : "" );
+            Client_PrintToChatAll(false, "{O}★ {N}Hunter was not skeeted ({OG}%i {N}damage).%s", damage, (bOverKill) ? "(Would've skeeted if hunter were unchipped!)" : "" );
         }
     }
     
@@ -2667,10 +2668,10 @@ HandleCrown( attacker, damage )
     {
         if ( IS_VALID_INGAME(attacker) )
         {
-            PrintToChatAll( "\x04%N\x01 crowned a witch (\x03%i\x01 damage).", attacker, damage );
+            Client_PrintToChatAll(false, "{O}★★★ {B}%N {N}crowned a witch ({OG}%i {N}damage)", attacker, damage );
         }
         else {
-            PrintToChatAll( "A witch was crowned." );
+            Client_PrintToChatAll(false, "{O}★★★ {N}A witch was crowned" );
         }
     }
     
@@ -2688,10 +2689,10 @@ HandleDrawCrown( attacker, damage, chipdamage )
     {
         if ( IS_VALID_INGAME(attacker) )
         {
-            PrintToChatAll( "\x04%N\x01 draw-crowned a witch (\x03%i\x01 damage, \x05%i\x01 chip).", attacker, damage, chipdamage );
+            Client_PrintToChatAll(false, "{O}★★ {B}%N {N}draw-crowned {R}a witch {N}({OG}%i {N}damage, {L}%i {N}chip)", attacker, damage, chipdamage );
         }
         else {
-            PrintToChatAll( "A witch was draw-crowned (\x03%i\x01 damage, \x05%i\x01 chip).", damage, chipdamage );
+            Client_PrintToChatAll(false, "{O}★★ {R}A witch {N}was draw-crowned ({OG}%i {N}damage, {L}%i {N}chip)", damage, chipdamage );
         }
     }
     
@@ -2711,11 +2712,11 @@ HandleTongueCut( attacker, victim )
     {
         if ( IS_VALID_INGAME(attacker) && IS_VALID_INGAME(victim) && !IsFakeClient(victim) )
         {
-            PrintToChatAll( "\x04%N\x01 cut \x05%N\x01's tongue.", attacker, victim );
+            Client_PrintToChatAll(false, "{O}★★ {B}%N {N}cut {R}%N{N}'s smoker tongue", attacker, victim );
         }
         else if ( IS_VALID_INGAME(attacker) )
         {
-            PrintToChatAll( "\x04%N\x01 cut smoker tongue.", attacker );
+            Client_PrintToChatAll(false, "{O}★★ {B}%N {N}cut smoker tongue", attacker );
         }
     }
     
@@ -2734,11 +2735,11 @@ HandleSmokerSelfClear( attacker, victim, bool:withShove = false )
     ) {
         if ( IS_VALID_INGAME(attacker) && IS_VALID_INGAME(victim) && !IsFakeClient(victim) )
         {
-            PrintToChatAll( "\x04%N\x01 self-cleared from \x05%N\x01's tongue%s.", attacker, victim, (withShove) ? " by shoving" : "" );
+            Client_PrintToChatAll(false, "{O}★★ {B}%N {N}self-cleared from {R}%N{N}'s tongue{OG}%s", attacker, victim, (withShove) ? " by shoving" : "" );
         }
         else if ( IS_VALID_INGAME(attacker) )
         {
-            PrintToChatAll( "\x04%N\x01 self-cleared from a smoker tongue%s.", attacker, (withShove) ? " by shoving" : "" );
+            Client_PrintToChatAll(false, "{O}★★ {B}%N {N}self-cleared from a smoker tongue{OG}%s", attacker, (withShove) ? " by shoving" : "" );
         }
     }
     
@@ -2763,16 +2764,7 @@ HandleRockSkeeted( attacker, victim )
     // report?
     if ( GetConVarBool(g_hCvarReport) && GetConVarInt(g_hCvarReportFlags) & REP_ROCKSKEET )
     {
-        /*
-        if ( IS_VALID_INGAME(attacker) && IS_VALID_INGAME(victim) && !IsFakeClient(victim) )
-        {
-            PrintToChatAll( "\x04%N\x01 skeeted \x05%N\x01's rock.", attacker, victim );
-        }
-        else if ( IS_VALID_INGAME(attacker) )
-        {
-        }
-        */
-        PrintToChatAll( "\x04%N\x01 skeeted a tank rock.", attacker );
+        Client_PrintToChatAll(false, "{O}★★ {B}%N {N}broke a tank rock", attacker );
     }
     
     Call_StartForward(g_hForwardRockSkeeted);
@@ -2792,11 +2784,11 @@ stock HandleHunterDP( attacker, victim, actualDamage, Float:calculatedDamage, Fl
     ) {
         if ( IS_VALID_INGAME(attacker) && IS_VALID_INGAME(victim) && !IsFakeClient(attacker) )
         {
-            PrintToChatAll( "\x04%N\x01 high-pounced \x05%N\x01 (\x03%i\x01 damage, height: \x05%i\x01).", attacker,  victim, RoundFloat(calculatedDamage), RoundFloat(height) );
+            Client_PrintToChatAll(false, "{O}★★ {R}%N {N}high-pounced {B}%N {N}({OG}%i {N}damage, height: {L}%i{N})", attacker,  victim, RoundFloat(calculatedDamage), RoundFloat(height) );
         }
         else if ( IS_VALID_INGAME(victim) )
         {
-            PrintToChatAll( "A hunter high-pounced \x05%N\x01 (\x03%i\x01 damage, height: \x05%i\x01).", victim, RoundFloat(calculatedDamage), RoundFloat(height) );
+            Client_PrintToChatAll(false, "{O}★★ {N}A hunter high-pounced {B}%N {N}({OG}%i {N}damage, height: {L}%i{N})", victim, RoundFloat(calculatedDamage), RoundFloat(height) );
         }
     }
     
@@ -2819,11 +2811,11 @@ stock HandleJockeyDP( attacker, victim, Float:height )
     ) {
         if ( IS_VALID_INGAME(attacker) && IS_VALID_INGAME(victim) && !IsFakeClient(attacker) )
         {
-            PrintToChatAll( "\x04%N\x01 jockey high-pounced \x05%N\x01 (height: \x05%i\x01).", attacker,  victim, RoundFloat(height) );
+            Client_PrintToChatAll(false, "{O}★★ {R}%N {N}jockey high-pounced {B}%N {N}(height: {OG}%i{N})", attacker,  victim, RoundFloat(height) );
         }
         else if ( IS_VALID_INGAME(victim) )
         {
-            PrintToChatAll( "A jockey high-pounced \x05%N\x01 (height: \x05%i\x01).", victim, RoundFloat(height) );
+            Client_PrintToChatAll(false, "{O}★★ {N}A jockey high-pounced {B}%N {N}(height: {OG}%i{N})", victim, RoundFloat(height) );
         }
     }
     
@@ -2845,7 +2837,7 @@ stock HandleDeathCharge( attacker, victim, Float:height, Float:distance, bool:bC
     ) {
         if ( IS_VALID_INGAME(attacker) && IS_VALID_INGAME(victim) && !IsFakeClient(attacker) )
         {
-            PrintToChatAll( "\x04%N\x01 death-charged \x05%N\x01 %s(height: \x05%i\x01).",
+            Client_PrintToChatAll(false, "{O}★★★★ {R}%N {N}death-charged {B}%N {N}%s(height: {OG}%i{N})",
                     attacker,
                     victim,
                     (bCarried) ? "" : "by bowling ",
@@ -2854,7 +2846,7 @@ stock HandleDeathCharge( attacker, victim, Float:height, Float:distance, bool:bC
         }
         else if ( IS_VALID_INGAME(victim) )
         {
-            PrintToChatAll( "A charger death-charged \x05%N\x01 %s(height: \x05%i\x01).",
+            Client_PrintToChatAll(false, "{O}★★★★ {N}A charger death-charged {B}%N {N}%s(height: {OG}%i{N})",
                     victim,
                     (bCarried) ? "" : "by bowling ",
                     RoundFloat(height) 
@@ -2893,13 +2885,13 @@ stock HandleClear( attacker, victim, pinVictim, zombieClass, Float:clearTimeA, F
             {
                 if ( IS_VALID_INGAME(pinVictim) )
                 {
-                    PrintToChatAll( "\x04%N\x01 insta-cleared \x05%N\x01 from \x04%N\x01 (%s) (%.2f seconds).",
+                    Client_PrintToChatAll(false, "{O}★★ {B}%N {N}insta-cleared {B}%N {N}from {R}%N{N}'s %s ({OG}%.2f {N}seconds)",
                             attacker, pinVictim, victim,
                             g_csSIClassName[zombieClass],
                             fClearTime
                         );
                 } else {
-                    PrintToChatAll( "\x04%N\x01 insta-cleared a teammate from \x04%N\x01 (%s) (%.2f seconds).",
+                    Client_PrintToChatAll(false, "{O}★★ {B}%N {N}insta-cleared a teammate from {R}%N{N}'s %s ({OG}%.2f {N}seconds)",
                             attacker, victim,
                             g_csSIClassName[zombieClass],
                             fClearTime
@@ -2910,13 +2902,13 @@ stock HandleClear( attacker, victim, pinVictim, zombieClass, Float:clearTimeA, F
             {
                 if ( IS_VALID_INGAME(pinVictim) )
                 {
-                    PrintToChatAll( "\x04%N\x01 insta-cleared \x05%N\x01 from a %s (%.2f seconds).",
+                    Client_PrintToChatAll(false, "{O}★★ {B}%N {N}insta-cleared {B}%N {N}from a %s ({OG}%.2f {N}seconds)",
                             attacker, pinVictim,
                             g_csSIClassName[zombieClass],
                             fClearTime
                         );
                 } else {
-                    PrintToChatAll( "\x04%N\x01 insta-cleared a teammate from a %s (%.2f seconds).",
+                    Client_PrintToChatAll(false, "{O}★★ {B}%N {N}insta-cleared a teammate from a %s ({OG}%.2f {N}seconds)",
                             attacker,
                             g_csSIClassName[zombieClass],
                             fClearTime
@@ -2953,7 +2945,7 @@ stock HandleBHopStreak( survivor, streak, Float: maxVelocity )
             IS_VALID_INGAME(survivor) && !IsFakeClient(survivor) &&
             streak >= GetConVarInt(g_hCvarBHopMinStreak)
     ) {
-        PrintToChatAll( "\x04%N\x01 got \x05%i\x01 bunnyhop%s in a row (top speed: \x05%.1f\x01).",
+        Client_PrintToChatAll(false, "{O}★ {B}%N {N}got {L}%i bunnyhop%s {N}in a row (top speed: {OG}%.1f{N})",
                 survivor,
                 streak,
                 ( streak > 1 ) ? "s" : "",
@@ -2974,7 +2966,7 @@ stock HandleCarAlarmTriggered( survivor, infected, reason )
             IS_VALID_INGAME(survivor) && !IsFakeClient(survivor)
     ) {
         if ( reason == CALARM_HIT ) {
-            PrintToChatAll( "\x05%N\x01 triggered an alarm with a hit.", survivor );
+            Client_PrintToChatAll(false, "{O}★ {B}%N {N}triggered a car alarm {OG}by shooting the car", survivor );
         }
         else if ( reason == CALARM_TOUCHED )
         {
@@ -2983,39 +2975,39 @@ stock HandleCarAlarmTriggered( survivor, infected, reason )
             {
                 if ( !IsFakeClient(infected) )
                 {
-                    PrintToChatAll( "\x04%N\x01 made \x05%N\x01 trigger an alarm.", infected, survivor );
+                    Client_PrintToChatAll(false, "{O}★ {R}%N {N}made {B}%N {N}trigger a car alarm", infected, survivor );
                 }
                 else {
                     switch ( GetEntProp(infected, Prop_Send, "m_zombieClass") )
                     {
-                        case ZC_SMOKER: { PrintToChatAll( "\x01A hunter made \x05%N\x01 trigger an alarm.", survivor ); }
-                        case ZC_JOCKEY: { PrintToChatAll( "\x01A jockey made \x05%N\x01 trigger an alarm.", survivor ); }
-                        case ZC_CHARGER: { PrintToChatAll( "\x01A charger made \x05%N\x01 trigger an alarm.", survivor ); }
-                        default: { PrintToChatAll( "\x01A bot infected made \x05%N\x01 trigger an alarm.", survivor ); }
+                        case ZC_SMOKER: { Client_PrintToChatAll(false, "{O}★ {N}A hunter made {B}%N {N}trigger a car alarm", survivor ); }
+                        case ZC_JOCKEY: { Client_PrintToChatAll(false, "{O}★ {N}A jockey made {B}%N {N}trigger a car alarm", survivor ); }
+                        case ZC_CHARGER: { Client_PrintToChatAll(false, "{O}★ {N}A charger made {B}%N {N}trigger a car alarm", survivor ); }
+                        default: { Client_PrintToChatAll(false, "{O}★ {N}A special infected made {B}%N {N}trigger a car alarm", survivor ); }
                     }
                 }
             }
             else
             {
-                PrintToChatAll( "\x05%N\x01 touched an alarmed car.", survivor );
+                Client_PrintToChatAll(false, "{O}★ {B}%N {N}triggered a car alarm {OG}by touching the car", survivor );
             }
         }
         else if ( reason == CALARM_EXPLOSION ) {
-            PrintToChatAll( "\x05%N\x01 triggered an alarm with an explosion.", survivor );
+            Client_PrintToChatAll(false, "{O}★ {B}%N {N}triggered a car alarm {OG}by caused explosion", survivor );
         }
-        else if ( reason == CALARM_BOOMER )
+        else if (reason == CALARM_BOOMER)
         {
             if ( IS_VALID_INFECTED(infected) && !IsFakeClient(infected) )
             {
-                PrintToChatAll( "\x05%N\x01 triggered an alarm by killing a boomer \x04%N\x01.", survivor, infected );
+                Client_PrintToChatAll(false, "{O}★ {B}%N {N}triggered a car alarm {OG}by popping {R}%N{OG}'s boomer nearby", survivor, infected );
             }
             else
             {
-                PrintToChatAll( "\x05%N\x01 triggered an alarm by shooting a boomer.", survivor );
+                Client_PrintToChatAll(false, "{O}★ {B}%N {N}triggered a car alarm {OG}by popping a boomer nearby.", survivor );
             }
         }
         else {
-            PrintToChatAll( "\x05%N\x01 triggered an alarm.", survivor );
+            Client_PrintToChatAll(false, "{O}★ {B}%N {N}triggered a car alarm.", survivor );
         }
     }
     
