@@ -254,30 +254,30 @@ new     Handle:         g_hRockTrie                                         = IN
 new     Handle:         g_hCarTrie                                          = INVALID_HANDLE;   // car alarm tracking
 
 // all SI / pinners
-new     Float:          g_fSpawnTime            [MAXPLAYERS + 1];                               // time the SI spawned up
-new     Float:          g_fPinTime              [MAXPLAYERS + 1][2];                            // time the SI pinned a target: 0 = start of pin (tongue pull, charger carry); 1 = carry end / tongue reigned in
+new     float:          g_fSpawnTime            [MAXPLAYERS + 1];                               // time the SI spawned up
+new     float:          g_fPinTime              [MAXPLAYERS + 1][2];                            // time the SI pinned a target: 0 = start of pin (tongue pull, charger carry); 1 = carry end / tongue reigned in
 new                     g_iSpecialVictim        [MAXPLAYERS + 1];                               // current victim (set in traceattack, so we can check on death)
 
 // hunters: skeets/pounces
 new                     g_iHunterShotDmgTeam    [MAXPLAYERS + 1];                               // counting shotgun blast damage for hunter, counting entire survivor team's damage
 new                     g_iHunterShotDmg        [MAXPLAYERS + 1][MAXPLAYERS + 1];               // counting shotgun blast damage for hunter / skeeter combo
-new     Float:          g_fHunterShotStart      [MAXPLAYERS + 1][MAXPLAYERS + 1];               // when the last shotgun blast on hunter started (if at any time) by an attacker
-new     Float:          g_fHunterTracePouncing  [MAXPLAYERS + 1];                               // time when the hunter was still pouncing (in traceattack) -- used to detect pouncing status
-new     Float:          g_fHunterLastShot       [MAXPLAYERS + 1];                               // when the last shotgun damage was done (by anyone) on a hunter
+new     float:          g_fHunterShotStart      [MAXPLAYERS + 1][MAXPLAYERS + 1];               // when the last shotgun blast on hunter started (if at any time) by an attacker
+new     float:          g_fHunterTracePouncing  [MAXPLAYERS + 1];                               // time when the hunter was still pouncing (in traceattack) -- used to detect pouncing status
+new     float:          g_fHunterLastShot       [MAXPLAYERS + 1];                               // when the last shotgun damage was done (by anyone) on a hunter
 new                     g_iHunterLastHealth     [MAXPLAYERS + 1];                               // last time hunter took any damage, how much health did it have left?
 new                     g_iHunterOverkill       [MAXPLAYERS + 1];                               // how much more damage a hunter would've taken if it wasn't already dead
 new     bool:           g_bHunterKilledPouncing [MAXPLAYERS + 1];                               // whether the hunter was killed when actually pouncing
 new                     g_iPounceDamage         [MAXPLAYERS + 1];                               // how much damage on last 'highpounce' done
-new     Float:          g_fPouncePosition       [MAXPLAYERS + 1][3];                            // position that a hunter (jockey?) pounced from (or charger started his carry)
+new     float:          g_fPouncePosition       [MAXPLAYERS + 1][3];                            // position that a hunter (jockey?) pounced from (or charger started his carry)
 
 // deadstops
-new     Float:          g_fVictimLastShove      [MAXPLAYERS + 1][MAXPLAYERS + 1];               // when was the player shoved last by attacker? (to prevent doubles)
+new     float:          g_fVictimLastShove      [MAXPLAYERS + 1][MAXPLAYERS + 1];               // when was the player shoved last by attacker? (to prevent doubles)
 
 // levels / charges
 new                     g_iChargerHealth        [MAXPLAYERS + 1];                               // how much health the charger had the last time it was seen taking damage
-new     Float:          g_fChargeTime           [MAXPLAYERS + 1];                               // time the charger's charge last started, or if victim, when impact started
+new     float:          g_fChargeTime           [MAXPLAYERS + 1];                               // time the charger's charge last started, or if victim, when impact started
 new                     g_iChargeVictim         [MAXPLAYERS + 1];                               // who got charged
-new     Float:          g_fChargeVictimPos      [MAXPLAYERS + 1][3];                            // location of each survivor when it got hit by the charger
+new     float:          g_fChargeVictimPos      [MAXPLAYERS + 1][3];                            // location of each survivor when it got hit by the charger
 new                     g_iVictimCharger        [MAXPLAYERS + 1];                               // for a victim, by whom they got charge(impacted)
 new                     g_iVictimFlags          [MAXPLAYERS + 1];                               // flags stored per charge victim: VICFLAGS_ 
 new                     g_iVictimMapDmg         [MAXPLAYERS + 1];                               // for a victim, how much the cumulative map damage is so far (trigger hurt / drowning)
@@ -288,7 +288,7 @@ new                     g_iBoomerGotShoved      [MAXPLAYERS + 1];               
 new                     g_iBoomerVomitHits      [MAXPLAYERS + 1];                               // how many booms in one vomit so far
 
 // crowns
-new     Float:          g_fWitchShotStart       [MAXPLAYERS + 1];                               // when the last shotgun blast from a survivor started (on any witch)
+new     float:          g_fWitchShotStart       [MAXPLAYERS + 1];                               // when the last shotgun blast from a survivor started (on any witch)
 
 // smoker clears
 new     bool:           g_bSmokerClearCheck     [MAXPLAYERS + 1];                               // [smoker] smoker dies and this is set, it's a self-clear if g_iSmokerVictim is the killer
@@ -305,11 +305,11 @@ new                     g_iRocksBeingThrownCount                            = 0;
 new     bool:           g_bIsHopping            [MAXPLAYERS + 1];                               // currently in a hop streak
 new     bool:           g_bHopCheck             [MAXPLAYERS + 1];                               // flag to check whether a hopstreak has ended (if on ground for too long.. ends)
 new                     g_iHops                 [MAXPLAYERS + 1];                               // amount of hops in streak
-new     Float:          g_fLastHop              [MAXPLAYERS + 1][3];                            // velocity vector of last jump
-new     Float:          g_fHopTopVelocity       [MAXPLAYERS + 1];                               // maximum velocity in hopping streak
+new     float:          g_fLastHop              [MAXPLAYERS + 1][3];                            // velocity vector of last jump
+new     float:          g_fHopTopVelocity       [MAXPLAYERS + 1];                               // maximum velocity in hopping streak
 
 // alarms
-new     Float:          g_fLastCarAlarm                                     = 0.0;              // time when last car alarm went off
+new     float:          g_fLastCarAlarm                                     = 0.0;              // time when last car alarm went off
 new                     g_iLastCarAlarmReason   [MAXPLAYERS + 1];                               // what this survivor did to set the last alarm off
 new                     g_iLastCarAlarmBoomer;                                                  // if a boomer triggered an alarm, remember it
 
