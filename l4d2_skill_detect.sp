@@ -1,57 +1,3 @@
-/**
- *  L4D2_skill_detect
- *
- *  Plugin to detect and forward reports about 'skill'-actions,
- *  such as skeets, crowns, levels, dp's.
- *  Works in campaign and versus modes.
- *
- *  m_isAttemptingToPounce  can only be trusted for
- *  AI hunters -- for human hunters this gets cleared
- *  instantly on taking killing damage
- *
- *  Shotgun skeets and teamskeets are only counted if the
- *  added up damage to pounce_interrupt is done by shotguns
- *  only. 'Skeeting' chipped hunters shouldn't count, IMO.
- *
- *  This performs global forward calls to:
- *      OnSkeet( survivor, hunter )
- *      OnSkeetMelee( survivor, hunter )
- *      OnSkeetGL( survivor, hunter )
- *      OnSkeetSniper( survivor, hunter )
- *      OnSkeetHurt( survivor, hunter, damage, isOverkill )
- *      OnSkeetMeleeHurt( survivor, hunter, damage, isOverkill )
- *      OnSkeetSniperHurt( survivor, hunter, damage, isOverkill )
- *      OnHunterDeadstop( survivor, hunter )
- *      OnBoomerPop( survivor, boomer, shoveCount, Float:timeAlive )
- *      OnChargerLevel( survivor, charger )
- *      OnChargerLevelHurt( survivor, charger, damage )
- *      OnWitchCrown( survivor, damage )
- *      OnWitchCrownHurt( survivor, damage, chipdamage )
- *      OnTongueCut( survivor, smoker )
- *      OnSmokerSelfClear( survivor, smoker, withShove )
- *      OnTankRockSkeeted( survivor, tank )
- *      OnTankRockEaten( tank, survivor )
- *      OnHunterHighPounce( hunter, victim, actualDamage, Float:calculatedDamage, Float:height, bool:bReportedHigh, bool:bPlayerIncapped )
- *      OnJockeyHighPounce( jockey, victim, Float:height, bool:bReportedHigh )
- *      OnDeathCharge( charger, victim, Float: height, Float: distance, wasCarried )
- *      OnSpecialShoved( survivor, infected, zombieClass )
- *      OnSpecialClear( clearer, pinner, pinvictim, zombieClass, Float:timeA, Float:timeB, withShove )
- *      OnBoomerVomitLanded( boomer, amount )
- *      OnBunnyHopStreak( survivor, streak, Float:maxVelocity )
- *      OnCarAlarmTriggered( survivor, infected, reason )
- *
- *      OnDeathChargeAssist( assister, charger, victim )    [ not done yet ]
- *      OnBHop( player, isInfected, speed, streak )         [ not done yet ]
- *
- *  Where survivor == -2 if it was a team effort, -1 or 0 if unknown or invalid client.
- *  damage is the amount of damage done (that didn't add up to skeeting damage),
- *  and isOverkill indicates whether the shot would've been a skeet if the hunter
- *  had not been chipped.
- *
- *  @author         Tabun
- *  @libraryname    skill_detect
- */
-
 #pragma semicolon 1
 
 #include <sourcemod>
@@ -340,88 +286,7 @@ new     Handle:         g_hCvarMinPounceDistance                            = IN
 new     Handle:         g_hCvarMaxPounceDamage                              = INVALID_HANDLE;   // z_hunter_max_pounce_bonus_damage;
 
 
-/*
-    Reports:
-    --------
-    Damage shown is damage done in the last shot/slash. So for crowns, this means
-    that the 'damage' value is one shotgun blast
-    
 
-    Quirks:
-    -------
-    Does not report people cutting smoker tongues that target players other
-    than themselves. Could be done, but would require (too much) tracking.
-    
-    Actual damage done, on Hunter DPs, is low when the survivor gets incapped
-    by (a fraction of) the total pounce damage.
-    
-    
-    Fake Damage
-    -----------
-    Hiding of fake damage has the following consequences:
-        - Drawcrowns are less likely to be registered: if a witch takes too
-          much chip before the crowning shot, the final shot will be considered
-          as doing too little damage for a crown (even if it would have been a crown
-          had the witch had more health).
-        - Charger levels are harder to get on chipped chargers. Any charger that
-          has taken (600 - 390 =) 210 damage or more cannot be leveled (even if
-          the melee swing would've killed the charger (1559 damage) if it'd have
-          had full health).
-    I strongly recommend leaving fakedamage visible: it will offer more feedback on
-    the survivor's action and reward survivors doing (what would be) full crowns and
-    levels on chipped targets.
-    
-    
-    To Do
-    -----
-    
-    - fix:  tank rock owner is not reliable for the RockEaten forward
-    - fix:  tank rock skeets still unreliable detection (often triggers a 'skeet' when actually landed on someone)
-    
-    - fix:  apparently some HR4 cars generate car alarm messages when shot, even when no alarm goes off
-            (combination with car equalize plugin?)
-            - see below: the single hook might also fix this.. -- if not, hook for sound
-            - do a hookoutput on prop_car_alarm's and use that to track the actual alarm
-                going off (might help in the case 2 alarms go off exactly at the same time?)
-    - fix:  double prints on car alarms (sometimes? epi + m60)
-
-    - fix:  sometimes instaclear reports double for single clear (0.16s / 0.19s) epi saw this, was for hunter
-    - fix:  deadstops and m2s don't always register .. no idea why..
-    - fix:  sometimes a (first?) round doesn't work for skeet detection.. no hurt/full skeets are reported or counted
-
-    - make forwards fire for every potential action,
-        - include the relevant values, so other plugins can decide for themselves what to consider it
-    
-    - test chargers getting dislodged with boomer pops?
-    
-    - add commonhop check
-    - add deathcharge assist check
-        - smoker
-        - jockey
-        
-    - add deathcharge coordinates for some areas
-        - DT4 next to saferoom
-        - DA1 near the lower roof, on sidewalk next to fence (no hurttrigger there)
-        - DA2 next to crane roof to the right of window
-            DA2 charge down into start area, after everyone's jumped the fence
-            
-    - count rock hits even if they do no damage [epi request]    
-    - sir
-        - make separate teamskeet forward, with (for now, up to) 4 skeeters + the damage each did
-    - xan
-        - add detection/display of unsuccesful witch crowns (witch death + info)
-        
-    detect...
-        - ? add jockey deadstops (and change forward to reflect type)
-        - ? speedcrown detection?
-        - ? spit-on-cap detection
-    
-    ---
-    done:
-        - applied sanity bounds to calculated damage for hunter dps
-        - removed tank's name from rock skeet print
-        - 300+ speed hops are considered hops even if no increase
-*/
 
 public Plugin:myinfo = 
 {
@@ -2764,7 +2629,7 @@ HandleRockSkeeted( attacker, victim )
     // report?
     if ( GetConVarBool(g_hCvarReport) && GetConVarInt(g_hCvarReportFlags) & REP_ROCKSKEET )
     {
-        Client_PrintToChatAll(false, "{O}★★ {B}%N {N}broke a tank rock", attacker );
+        Client_PrintToChatAll(false, "{O}★ {B}%N {N}broke a tank rock", attacker );
     }
     
     Call_StartForward(g_hForwardRockSkeeted);
