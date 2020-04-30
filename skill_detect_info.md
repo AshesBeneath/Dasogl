@@ -22,4 +22,6 @@ Eğer yakın dövüş silahı ile (balta, pala, sopa, vb.) yapılırsa _melee-sk
 
 - **High-Pounce-** Hunter veya jockey ile bir sağ kalanı belirli bir yüksekliğin üstünden atlayarak kafasının üstüne atlamaktır. Eğer Hunter ile yapılırsa ekstra başlangıç hasarı da vermektedir.
 
+- **Death-Charge-** Bir charger'ın bir sağ kalanı yakalayıp mutlak ölümüne götürmesi (Dead Center 1'de binadan aşağı uçurmak, No Mercy 4'de asansörden sonraki yerde aşağı uçurmak veya The Parish finalinde köprüden denize uçurmak.
+
 - Bir sağ kalanın alarmlı arabayı öttürmesi. (Kendilerinin arabaya dokunması/sıkması veya enfektelerin atağıyla arabaya götürerek.)
